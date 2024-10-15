@@ -14,9 +14,9 @@ Below is a list of every base variable/function/array. Each will be explained la
 
 @example
 pkgbase="bar" # @xref{pkgbase}
-pkgname=("foo" "barfoo")
-repology=("project: bar")
-arch=('any' 'amd64' 'arm64')
+pkgname=("foo" "barfoo") # @xref{pkgname}
+repology=("project: bar") # @xref{repology}
+arch=('any' 'amd64' 'arm64') # @xref{arch}
 pkgver="1.0.0"
 pkgrel="3"
 epoch="4"
@@ -25,7 +25,10 @@ source=(
   "https://github.com/Elsie19/foo/archive/refs/tags/$@{pkgver@}.zip"
   "https://github.com/Elsie19/foo/archive/refs/tags/foo.desktop"
 )
-(...)sums=("9cc57f2ca39c2d81aed7e3d82af0b5711863bd3403bb8f024c4c3b4ecf9652a4" 'SKIP')
+(...)sums=(
+    "9cc57f2ca39c2d81aed7e3d82af0b5711863bd3403bb8f024c4c3b4ecf9652a4"
+    'SKIP'
+)
 nosubmodules=("foo")
 noextract=("bar")
 depends=("kdenlive")
@@ -115,14 +118,100 @@ Hello mfs.
 
 @menu
 * pkgbase:: Split packaging functionality.
+* pkgname:: Naming packages.
+* repology:: Linking package versions.
+* arch:: Controlling architecture building.
 @end menu
 
-@node pkgbase, , Sample Script, Sample Script
+@node pkgbase, pkgname, Sample Script, Sample Script
 @subsection pkgbase
-If this is not provided in a pacscript, then it is assumed that it is a singular @samp{pkgname}, and a @file{.SRCINFO} file assumes that @samp{pkgbase} is equal to that singular @samp{pkgname}. If using @url{https://wiki.archlinux.org/title/PKGBUILD#pkgbase, package splitting}, @samp{pkgname} is treated like an array, and multiple packages can be built.
+If this is not provided in a pacscript, then it is assumed that it is a singular @ref{pkgname}, and a @file{.SRCINFO} file assumes that @ref{pkgbase} is equal to that singular @samp{pkgname}. If using @url{https://wiki.archlinux.org/title/PKGBUILD#pkgbase, package splitting}, @samp{pkgname} is treated like an array, and multiple packages can be built.
 
-To split out the packages, they should define the functions @samp{package_pkgname()}, and can override the following variables inside of them: @samp{gives}, @samp{pkgdesc}, @samp{arch}, @samp{url}, @samp{license}, @samp{depends}, @samp{checkdepends}, @samp{optdepends}, @samp{pacdeps}, @samp{provides}, @samp{checkconflicts}, @samp{conflicts}, @samp{breaks}, @samp{replaces}, @samp{enhances}, @samp{recommends}, @samp{priority}, @samp{backup}, @samp{repology}.
+To split out the packages, they should define the functions @samp{package_pkgname()}, and can override the following variables inside of them: @samp{gives}, @samp{pkgdesc}, @ref{arch}, @samp{url}, @samp{license}, @samp{depends}, @samp{checkdepends}, @samp{optdepends}, @samp{pacdeps}, @samp{provides}, @samp{checkconflicts}, @samp{conflicts}, @samp{breaks}, @samp{replaces}, @samp{enhances}, @samp{recommends}, @samp{priority}, @samp{backup}, @ref{repology}.
 
 @quotation Caution
 In most cases, this should @strong{not} be provided in a pacscript. Only use this for split packages (pacscripts that build multiple packages from the same source).
+@end quotation
+
+@node pkgname, repology, pkgbase, Sample Script
+@subsection pkgname
+This is what Pacstall records as the name of the built package. Use the following naming schema:
+
+@itemize @bullet
+@item
+Keep it lowercase
+
+@item
+Pacscripts that install from a @samp{deb} file should be called @file{pkgname-deb}
+
+@item
+Pacscripts that install from a git repository should be called @file{pkgname-git}
+
+@item
+Pacscripts that install from an appimage should be called @file{pkgname-app}
+
+@item
+Pacscripts that install the binary of the package should be called @file{pkgname-bin}
+
+@item
+If a Pacscript does not fall under any of the categories above, use @file{pkgname}
+@end itemize
+
+@quotation Important
+The package suffix (@samp{-deb}, @samp{-git}, etc) must match the filename of the pacscript. If @code{pkgname="foo-deb"}, the file must be named @file{foo-deb.pacscript}. If there is no suffix, the file should be named @file{foo.pacscript}.
+@end quotation
+
+@node repology, arch, pkgname, Sample Script
+@subsection repology
+This is what @url{https://github.com/pacstall/pacup, Pacup} uses to get the latest version of your packaged program for updating the pacscript. @xref{Top,,, pacup, The Pacup Manual} to know how to add it to your repository.
+
+If the repology variable isn't present in the pacscript, Pacup will refuse to update it.
+
+@node arch, , repology, Sample Script
+@subsection arch
+This array is used to define what architectures your pacscripts will work on. Besides the usual architecture specifiers, you have available @samp{any} and @samp{all}:
+
+@multitable @columnfractions 0.1 0.9
+@headitem Name @tab Function
+
+@item @samp{any} @tab Package can be compiled on @emph{any} system, but will only run on the compiled architecture (compiled programs)
+@item @samp{all} @tab Package can run on @emph{all} systems, regardless of architecture (scripts usually)
+@end multitable
+
+Two variables, @samp{$CARCH} and @samp{$AARCH} are also available to you, and are linked to the current running architecture. You can get the value that @samp{$CARCH} would be on your system by running @code{dpkg --print-architecture}, and @samp{$AARCH} by running @code{echo $HOSTTYPE} (with two exceptions, starred below). These are differentiated in the given list with @samp{CARCH}/@samp{AARCH} (if only one is listed, the variables are equal).
+
+Pacstall supports all architectures that have an @url{https://www.debian.org/ports/, official Debian port}. These are currently:
+
+@itemize @bullet
+@item
+@samp{amd64}/@samp{x86_64}
+
+@item
+@samp{arm64}/@samp{aarch64}
+
+@item
+@samp{armel}/@samp{arm}
+
+@item
+@samp{armhf}/@samp{armv7h}*
+
+@item
+@samp{i386}/@samp{i686}*
+
+@item
+@samp{mps64el}
+
+@item
+@samp{ppc64el}
+
+@item
+@samp{riscv64}
+
+@item
+@samp{s390x}
+@end itemize
+
+@quotation Important
+@c TODO: ADD SOURCE REFERENCE!
+While both @samp{$CARCH} and @samp{$AARCH} will always be accessible to a pacscript, only one naming scheme may be used in the arch array. This means you cannot mix and match, like @code{arch=('amd64' 'i686')} or @code{arch=('arm64' 'aarch64')}. The naming scheme used will determine which enhanced arrays will be available. See @samp{source} for more on enhanced arrays.
 @end quotation
