@@ -1,0 +1,66 @@
+\input texinfo   @c -*-texinfo-*-
+
+@set VERSION 3.5.1 Telemagenta
+@set DATE 2024-08-11
+
+@c These are comments specific to the distributor of Pacstall
+@set GITHUBURL https://github.com/pacstall/pacstall
+@set REPOURL https://raw.githubusercontent.com/pacstall/pacstall-programs/master
+
+@copying
+This manual is for pacstall @value{VERSION} and is freely distributed under the terms of the GNU General Public License v3.
+@end copying
+
+@setfilename pacstall.info
+@settitle Pacstall User Guide
+
+@titlepage
+@title Pacstall User Guide
+@subtitle A guide for using pacstall
+@author Pacstall Team
+@end titlepage
+
+@contents
+
+@node Top, Introduction, , (dir)
+@top Pacstall User Guide
+
+@verbatim
+                                -------------------
+                           --------------------------
+                       ------------------------------
+                   ------------=**+-----------------
+                 -----------==****=-------------
+                ----------+**********+-------
+              ----------=*************+------
+             -----------+**************=---------
+             ----------=*****************+-----------
+               --------+*****************+------------
+             ----------=***************+=-------------
+           ------------=*************+=-------------
+          -------------***********+---------------
+          -------------+**********+-------------
+            -----------=***********=-------
+          -------------=************
+         ------------   *************
+        ----------      *************
+       -------           ************
+      ------      *  ***** **********
+       ---      *** *****************
+                ***********        *
+                 * ***
+@end verbatim
+
+@menu
+* Introduction:: Introduction to pacstall.
+* Commands:: Overview of pacstall commands.
+* Files:: Relevant files used by pacstall.
+* Pacscript:: Pacscript syntax reference.
+@end menu
+
+@include introduction.texi
+@include commands.texi
+@include files.texi
+@include pacscript.texi
+
+@bye

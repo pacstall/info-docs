@@ -1,0 +1,128 @@
+@node Pacscript, Sample Script, Files, Top
+@chapter Pacscript
+This chapter is a reference to the pacscript format.
+
+@menu
+* Sample Script:: Script with every key included.
+* Keys:: List of keys and descriptions of their functionality.
+@end menu
+
+@node Sample Script, Keys, Pacscript,
+@section Sample Script
+
+Below is a list of every base variable/function/array. Each will be explained later. @xref{Keys}.
+
+@example
+pkgbase="bar" # @xref{pkgbase}
+pkgname=("foo" "barfoo")
+repology=("project: bar")
+arch=('any' 'amd64' 'arm64')
+pkgver="1.0.0"
+pkgrel="3"
+epoch="4"
+url='https://foo.com/bar'
+source=(
+  "https://github.com/Elsie19/foo/archive/refs/tags/$@{pkgver@}.zip"
+  "https://github.com/Elsie19/foo/archive/refs/tags/foo.desktop"
+)
+(...)sums=("9cc57f2ca39c2d81aed7e3d82af0b5711863bd3403bb8f024c4c3b4ecf9652a4" 'SKIP')
+nosubmodules=("foo")
+noextract=("bar")
+depends=("kdenlive")
+makedepends=("ed>=1.20.1" "gcc")
+checkdepends=("just")
+optdepends=("bar: not foo"
+  "alacritty: a blazing fast terminal"
+)
+pacdeps=("dmenu" "tuner")
+breaks=("libbar-git")
+conflicts=("libfoo-git" "libfoo-bin" "libfoo-app")
+replaces=("alacritty")
+gives="libfoo"
+pkgdesc="Ultimate program capable of foo and bar
+Here is a long description started on a newline."
+backup=('usr/share/pacstall/repo/pacstallrepo')
+priority='essential'
+maintainer=(
+    "Mr. Person <mr.person@@protonmail.com>"
+    "Other person <other@@gmail.com>"
+)
+mask=('fizzle')
+provides=('foo')
+incompatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04')
+compatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04')
+license=('LGPL-2.1-or-later')
+external_connection=true
+
+prepare() @{
+  cd "$@{pkgname@}-$@{pkgver@}"
+  ./autogen.sh
+  ./configure
+@}
+
+build() @{
+  cd "$@{pkgname@}-$@{pkgver@}"
+  make -j"$@{NCPU@}" # Use this wherever you'd usually use $(nproc)
+@}
+
+check() @{
+  cd "$@{pkgname@}-$@{pkgver@}"
+  make checks
+@}
+
+package() @{
+  cd "$@{pkgname@}-$@{pkgver@}"
+  # It is recommended for paths to be condensed with
+  # variables and to be wrapped by double quotes
+  make install DESTDIR="$@{pkgdir@}"
+
+  # If the package comes already compiled, use 'install'
+  install -Dm755 "$@{pkgname@}" -t "$@{pkgdir@}/usr/bin"
+@}
+
+pre_install() @{
+  echo "Do pre-unpacking stuff here"
+@}
+
+pre_upgrade() @{
+  # run if a previous version of this package exists
+  echo "Do pre-unpacking stuff here"
+@}
+
+pre_remove() @{
+  # remove extra directories before an upgrade or removal
+  rm -rf somedir
+@}
+
+post_install() @{
+  echo "Do post-unpacking stuff here"
+@}
+
+post_upgrade() @{
+  # run if a previous version of this package exists
+  echo "Do post-unpacking stuff here"
+@}
+
+post_remove() @{
+  # remove directories that are not removed during removal
+  rm -rf somedir
+@}
+@end example
+
+@node Keys, , Pacscript,
+@section Keys
+Hello mfs.
+
+@menu
+* pkgbase:: Split packaging functionality.
+@end menu
+
+@node pkgbase, , Sample Script, Sample Script
+@subsection pkgbase
+If this is not provided in a pacscript, then it is assumed that it is a singular @samp{pkgname}, and a @file{.SRCINFO} file assumes that @samp{pkgbase} is equal to that singular @samp{pkgname}. If using @url{https://wiki.archlinux.org/title/PKGBUILD#pkgbase, package splitting}, @samp{pkgname} is treated like an array, and multiple packages can be built.
+
+To split out the packages, they should define the functions @samp{package_pkgname()}, and can override the following variables inside of them: @samp{gives}, @samp{pkgdesc}, @samp{arch}, @samp{url}, @samp{license}, @samp{depends}, @samp{checkdepends}, @samp{optdepends}, @samp{pacdeps}, @samp{provides}, @samp{checkconflicts}, @samp{conflicts}, @samp{breaks}, @samp{replaces}, @samp{enhances}, @samp{recommends}, @samp{priority}, @samp{backup}, @samp{repology}.
+
+@quotation Caution
+In most cases, this should @strong{not} be provided in a pacscript. Only use this for split packages (pacscripts that build multiple packages from the same source).
+@end quotation

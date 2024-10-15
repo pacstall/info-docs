@@ -1,0 +1,61 @@
+@node Files, Repository, Commands, Top
+@chapter Files
+This chapter is about relevant files that affect pacstall's operations.
+
+@menu
+* Repository:: Files related to retrieving, updating, and searching packages.
+* Updating:: Files relating to updating pacstall.
+@end menu
+
+@node Repository, pacstallrepo, Files,
+@section Repository
+These files relate to dealing with retrieving, updating, and searching packages.
+
+@menu
+* pacstallrepo:: Repository configuration file.
+* pacstallrepo: url. URL configuration.
+* pacstallrepo: alias. Aliasing URLS.
+@end menu
+
+@node pacstallrepo, url, Repository, Repository
+@subsection pacstallrepo
+The file @file{/usr/share/pacstall/repo/pacstallrepo} is a flat-file configuration format where keys are newline separated.
+
+@float Example pacstallrepo file
+@example
+@var{url} @@@var{alias}
+@end example
+@caption{@ref{url} and @ref{alias}}
+@end float
+
+@node url, , pacstallrepo, Repository
+@subsubsection url
+Any URL used must allow following by path structures (i.e., @file{/packages/foo/foo.pacscript}). The URL does not need to be accessible in its raw form, so long as it works with the full URL (base + @file{path/to/wherever}).
+
+@node alias, , pacstallrepo, Repository
+@subsubsection alias
+Aliases are used by the installing, searching, and removing functionality of pacstall. They offer a way to shorten the amount of text one must type to complete certain operations. The only requirement is that they are only composed of ASCII characters.
+
+@node Updating, pacstallrepo, Files,
+@section Updating
+These files are used to update pacstall.
+
+@menu
+* update:: Update file.
+@end menu
+
+@node update, , Updating, Updating
+@subsection update
+The file @file{/usr/share/pacstall/repo/update} is a flat-file configuration format.
+
+@float Example update file
+@example
+@var{pacstall} @var{master}
+@end example
+@end float
+
+It takes two values separated by a space:
+
+The first is the username on @url{https://github.com, GitHub}. The repository name from whatever user is chosen must be 'pacstall'.
+
+The second value is a branch name.

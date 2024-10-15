@@ -1,0 +1,3 @@
+@node Introduction, Commands, Top, Top
+@chapter Introduction
+Pacstall is the AUR for Ubuntu, allowing bleeding edge software without drawbacks.
