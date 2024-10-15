@@ -13,11 +13,11 @@ These files relate to dealing with retrieving, updating, and searching packages.
 
 @menu
 * pacstallrepo:: Repository configuration file.
-* pacstallrepo: url. URL configuration.
+* pacstallrepo: repo_url. URL configuration.
 * pacstallrepo: alias. Aliasing URLS.
 @end menu
 
-@node pacstallrepo, url, Repository, Repository
+@node pacstallrepo, repo_url, Repository, Repository
 @subsection pacstallrepo
 The file @file{/usr/share/pacstall/repo/pacstallrepo} is a flat-file configuration format where keys are newline separated.
 
@@ -25,11 +25,11 @@ The file @file{/usr/share/pacstall/repo/pacstallrepo} is a flat-file configurati
 @example
 @var{url} @@@var{alias}
 @end example
-@caption{@ref{url} and @ref{alias}}
+@caption{@ref{repo_url} and @ref{alias}}
 @end float
 
-@node url, , pacstallrepo, Repository
-@subsubsection url
+@node repo_url, , pacstallrepo, Repository
+@subsubsection repo_url
 Any URL used must allow following by path structures (i.e., @file{/packages/foo/foo.pacscript}). The URL does not need to be accessible in its raw form, so long as it works with the full URL (base + @file{path/to/wherever}).
 
 @node alias, , pacstallrepo, Repository

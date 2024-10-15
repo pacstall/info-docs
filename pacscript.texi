@@ -18,9 +18,9 @@ pkgname=("foo" "barfoo") # @xref{pkgname}
 repology=("project: bar") # @xref{repology}
 arch=('any' 'amd64' 'arm64') # @xref{arch}
 pkgver="1.0.0" # @xref{pkgver}
-pkgrel="3"
-epoch="4"
-url='https://foo.com/bar'
+pkgrel="3" # @xref{pkgrel}
+epoch="4" # @xref{epoch}
+url='https://foo.com/bar' # @xref{url}
 source=(
   "https://github.com/Elsie19/foo/archive/refs/tags/$@{pkgver@}.zip"
   "https://github.com/Elsie19/foo/archive/refs/tags/foo.desktop"
@@ -124,6 +124,7 @@ This section is dedicated to describing every valid key in a pacscript. You will
 * pkgver:: Controlling versioning.
 * pkgrel:: Control pacscript file versioning.
 * epoch:: Control forcible upgrades.
+* url:: Adding a useful link to project.
 @end menu
 
 @node pkgbase, pkgname, Sample Script, Sample Script
@@ -227,10 +228,14 @@ This is the version number. It should ideally (but not required) be using @url{h
 @subsection pkgrel
 This is used when you wish to trigger an update on users computers but @ref{pkgver} has not been updated. This could be used if you fix a dependency in a pacscript, or perhaps you forgot to add a line to the building process. It is implicitly set to @samp{1} if not included, and should not be included by default. Every time pkgver is updated, @samp{pkgrel} should be removed.
 
-@node epoch, , pkgrel, Sample Script
+@node epoch, url, pkgrel, Sample Script
 @subsection epoch
 This variable is used to forcibly upgrade a package in any circumstance. In most cases, a @samp{pkgrel} bump will work just fine, but certain circumstances may require an upgrade that breaks @url{https://wiki.archlinux.org/title/PKGBUILD#epoch, normal comparison logic}. It is assumed to be @samp{0} @url{https://www.debian.org/doc/debian-policy/ch-controlfields.html#version, by default}, and if used, should be a small integer.
 
 @quotation Caution
 Use this @emph{sparingly}, as any package using @samp{epoch} cannot remove the @samp{epoch} on the next @samp{pkgver} update.
 @end quotation
+
+@node url, , epoch, Sample Script
+@subsection url
+This variable is used to show the homepage/website of the package (if any).
