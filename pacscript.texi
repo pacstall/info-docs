@@ -38,9 +38,12 @@ optdepends=("bar: not foo"
   "alacritty: a blazing fast terminal"
 ) # @xref{optdepends}
 pacdeps=("dmenu" "tuner") # @xref{pacdeps}
-breaks=("libbar-git")
-conflicts=("libfoo-git" "libfoo-bin" "libfoo-app")
-replaces=("alacritty")
+breaks=("libbar-git") # @xref{breaks}
+conflicts=("libfoo-git" "libfoo-bin" "libfoo-app") # @xref{conflicts}
+makeconflicts=("ed") # @xref{makeconflicts}
+checkconflicts=("just") # @xref{makeconflicts}
+replaces=("alacritty") # @xref{replaces}
+recommends=("ttf-fira-code") # @xref{recommends}
 gives="libfoo"
 pkgdesc="Ultimate program capable of foo and bar
 Here is a long description started on a newline." # @xref{pkgdesc}
@@ -51,7 +54,7 @@ maintainer=(
     "Other person <other@@gmail.com>"
 ) # @xref{maintainer}
 mask=('fizzle')
-provides=('foo')
+provides=('foo') # @xref{provides}
 incompatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{incompatible}
 compatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{compatible}
 license=('LGPL-2.1-or-later') # @xref{license}
@@ -155,6 +158,12 @@ This section is dedicated to describing every valid key in a pacscript. You will
 (All package relations may use version constraints.)
 
 * breaks:: Denoting package conflicts.
+* conflicts:: Denoting package path conflicts.
+* makeconflicts:: Denoting makedepends conflicts.
+* checkconflicts:: Denoting checkdepends conflicts.
+* replaces:: Denoting packages that can be overwritten by package.
+* provides:: Denoting a list of packages that this package can satisfy as a dependency.
+* recommends:: Denoting a list of packages can improve functionality of this package.
 @end menu
 
 @node pkgbase, pkgname, Keys, Keys
@@ -543,8 +552,49 @@ If at build time the user decides not to install a package in @samp{optdepends},
 @subsection pacdeps
 This is an array that is used to declare dependencies on other pacstall packages. Functionally, they will be installed like @ref{makedepends} (before building) and will be logged like @ref{depends} (required). Unlike the other @samp{*depends} arrays, these cannot use version constraints, but may still be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
 
-@node breaks, , pacdeps, Keys
+@node breaks, conflicts, pacdeps, Keys
 @subsection breaks
 This is an array that declares packages that cannot be installed alongside this package. Any package declared in @ref{breaks} can be unpacked alongside this package, but both cannot exist. Essentially, this is what you should use to declare incompatibilities between packages that do @emph{not} have file path conflicts.
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node conflicts, makeconflicts, breaks, Keys
+@subsection conflicts
+This is an array similar to @ref{breaks}, except it declares that packages @emph{cannot} be unpacked at the same time, likely due to having files in the same locations.
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node makeconflicts, checkconflicts, conflicts, Keys
+@subsection makeconflicts
+This is an array used to declare packages that cannot be installed on the system at build-time, usually because of a package conflict with a build-time dependency.
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node checkconflicts, replaces, makedepends, Keys
+@subsection checkconflicts
+@c TODO: CHECK()
+This is an array used to declare packages that cannot be installed on the system for testing in the @samp{check()} function, usually because of a package conflict with a check dependency.
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node replaces, provides, checkconflicts, Keys
+@subsection replaces
+This is an array that declares packages that has files @url{https://www.debian.org/doc/debian-policy/ch-relationships#overwriting-files-in-other-packages, that can be overwritten by this package}. This functionality is available only in conjunction with @ref{breaks}.
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node provides, recommends, replaces, Keys
+@subsection provides
+A list of packages that this package can satisfy as a dependency. For instance, the package @samp{foobar-plus} could satisfy @samp{foobar}, so you would have this:
+
+@example
+provides=("foobar")
+@end example
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node recommends, , provides, Keys
+@subsection recommends
+A list of packages that this package does not depend on, but may receive improved functionality from, and most users would want to have included with their install. Packages marked "Recommends" have stronger weight than packages marked "Suggests", but can still be opted out of, unlike @ref{depends}.
 
 This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
