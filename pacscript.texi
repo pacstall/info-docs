@@ -52,8 +52,8 @@ maintainer=(
 )
 mask=('fizzle')
 provides=('foo')
-incompatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04')
-compatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04')
+incompatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{incompatible}
+compatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{compatible}
 license=('LGPL-2.1-or-later')
 external_connection=true
 
@@ -125,6 +125,8 @@ This section is dedicated to describing every valid key in a pacscript. You will
 * pkgrel:: Control pacscript file versioning.
 * epoch:: Control forcible upgrades.
 * url:: Adding a useful link to project.
+* incompatible:: Declaring package incompatiblities.
+* compatible:: Declaring package compatiblities.
 @end menu
 
 @node pkgbase, pkgname, Sample Script, Sample Script
@@ -236,6 +238,14 @@ This variable is used to forcibly upgrade a package in any circumstance. In most
 Use this @emph{sparingly}, as any package using @samp{epoch} cannot remove the @samp{epoch} on the next @samp{pkgver} update.
 @end quotation
 
-@node url, , epoch, Sample Script
+@node url, incompatible, epoch, Sample Script
 @subsection url
 This variable is used to show the homepage/website of the package (if any).
+
+@node incompatible, compatible, url, Sample Script
+@subsection incompatible
+This array is a list of distros/versions that cannot be used to build this package, for example due to outdated dependencies. Elements follow a schema of @samp{$distro:$version}, where either @samp{$distro} or @samp{$version} can be a glob character (@samp{*}), but not both. @samp{$version} can be a distro name (@samp{jammy}, @samp{noble}, @samp{sid}, etc) or a version number (@samp{22.04}, @samp{16.04}, etc).
+
+@node compatible, , incompatible, Sample Script
+@subsection compatible
+Allowed distros/versions that a package can build on. @xref{incompatible} for more information.

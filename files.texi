@@ -50,12 +50,16 @@ The file @file{/usr/share/pacstall/repo/update} is a flat-file configuration for
 
 @float Example update file
 @example
-@var{pacstall} @var{master}
+pacstall master
 @end example
 @end float
 
 It takes two values separated by a space:
 
-The first is the username on @url{https://github.com, GitHub}. The repository name from whatever user is chosen must be 'pacstall'.
+@enumerate
+@item
+Username on @url{https://github.com, GitHub}. The repository name from whatever user is chosen must be 'pacstall'.
 
-The second value is a branch name.
+@item
+Branch name.
+@end enumerate
