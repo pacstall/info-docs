@@ -44,16 +44,20 @@ makeconflicts=("ed") # @xref{makeconflicts}
 checkconflicts=("just") # @xref{makeconflicts}
 replaces=("alacritty") # @xref{replaces}
 recommends=("ttf-fira-code") # @xref{recommends}
-gives="libfoo"
+suggests=("bar: not foo"
+  "alacritty: a blazing fast terminal"
+) # @xref{suggests}
+enhances=("foobar-bar") # @xref{enhances}
+gives="libfoo" # @xref{gives}
 pkgdesc="Ultimate program capable of foo and bar
 Here is a long description started on a newline." # @xref{pkgdesc}
 backup=('usr/share/pacstall/repo/pacstallrepo') # @xref{backup}
-priority='essential'
+priority='essential' # @xref{priority}
 maintainer=(
     "Mr. Person <mr.person@@protonmail.com>"
     "Other person <other@@gmail.com>"
 ) # @xref{maintainer}
-mask=('fizzle')
+mask=('fizzle') # @xref{mask}
 provides=('foo') # @xref{provides}
 incompatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{incompatible}
 compatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{compatible}
@@ -64,17 +68,17 @@ prepare() @{
   cd "$@{pkgname@}-$@{pkgver@}"
   ./autogen.sh
   ./configure
-@}
+@} # @xref{prepare()}
 
 build() @{
   cd "$@{pkgname@}-$@{pkgver@}"
   make -j"$@{NCPU@}" # Use this wherever you'd usually use $(nproc)
-@}
+@} # @xref{build()}
 
 check() @{
   cd "$@{pkgname@}-$@{pkgver@}"
   make checks
-@}
+@} # @xref{check()}
 
 package() @{
   cd "$@{pkgname@}-$@{pkgver@}"
@@ -84,35 +88,35 @@ package() @{
 
   # If the package comes already compiled, use 'install'
   install -Dm755 "$@{pkgname@}" -t "$@{pkgdir@}/usr/bin"
-@}
+@} # @xref{package()}
 
 pre_install() @{
   echo "Do pre-unpacking stuff here"
-@}
+@} # @xref{pre_install()}
 
 pre_upgrade() @{
   # run if a previous version of this package exists
   echo "Do pre-unpacking stuff here"
-@}
+@} # @xref{pre_upgrade()}
 
 pre_remove() @{
   # remove extra directories before an upgrade or removal
   rm -rf somedir
-@}
+@} # @xref{pre_remove()}
 
 post_install() @{
   echo "Do post-unpacking stuff here"
-@}
+@} # @xref{post_install()}
 
 post_upgrade() @{
   # run if a previous version of this package exists
   echo "Do post-unpacking stuff here"
-@}
+@} # @xref{post_upgrade()}
 
 post_remove() @{
   # remove directories that are not removed during removal
   rm -rf somedir
-@}
+@} # @xref{post_remove()}
 @end example
 
 @node Keys, , Pacscript,
@@ -164,6 +168,29 @@ This section is dedicated to describing every valid key in a pacscript. You will
 * replaces:: Denoting packages that can be overwritten by package.
 * provides:: Denoting a list of packages that this package can satisfy as a dependency.
 * recommends:: Denoting a list of packages can improve functionality of this package.
+* suggests:: Similar to optdepends but used for distributing built packages.
+* enhances:: List of packages that this package can satisfy as a suggested package or recommended package.
+* gives:: Override package name.
+* priority:: Sets priority of package.
+* mask:: Hide results from package managers.
+
+---- Functions ----
+
+------ Packaging Scripts ------
+
+* prepare():: Preparing packages.
+* build():: Building packages.
+* check():: Sanity checking packages.
+* package():: Install packages.
+
+------ Maintainer Scripts ------
+
+* pre_remove()::
+* pre_install()::
+* pre_upgrade()::
+* post_remove()::
+* post_install()::
+* post_upgrade()::
 @end menu
 
 @node pkgbase, pkgname, Keys, Keys
@@ -593,8 +620,127 @@ provides=("foobar")
 
 This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
 
-@node recommends, , provides, Keys
+@node recommends, suggests, provides, Keys
 @subsection recommends
 A list of packages that this package does not depend on, but may receive improved functionality from, and most users would want to have included with their install. Packages marked "Recommends" have stronger weight than packages marked "Suggests", but can still be opted out of, unlike @ref{depends}.
 
 This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node suggests, enhances, recommends, Keys
+@subsection suggests
+A list of packages that this package does not depend on, but may receive improved functionality from. This is most useful for when building static packages, to use instead of @ref{optdepends}, as optdepends that are installed on the system are marked as @ref{depends}.
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node enhances, gives, suggests, Keys
+@subsection enhances
+A list of packages that this package can satisfy as a suggested package or recommended package. For instance, if the package @samp{foobar} recommends @samp{foobar-extras}, in @samp{foobar-extras} you would have:
+
+@example
+enhances=("foobar")
+@end example
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node gives, priority, enhances, Keys
+@subsection gives
+This variable is used generally in conjunction with @ref{pkgname}, in which @samp{gives} will override the name that the package will take. General examples look like:
+
+@example
+pkgname="foo-git"
+gives="foo"
+@end example
+
+In order to distinguish the pacstall name and the installed package name.
+
+This variable can be enhanced by @samp{$arch} and/or @samp{$DISTRO}. @emph{However}, unlike the arrays, entries do not append, but instead override. They override in order of increasing specificity:
+
+@multitable @columnfractions .25 .38
+@headitem Order @tab Variable
+@item Least specific
+@tab @samp{gives}
+@item
+@tab @samp{gives_$arch}
+@item
+@tab @samp{gives_$distrobase}
+@item
+@tab @samp{gives_$distrorel}
+@item
+@tab @samp{gives_$@{distrobase@}_$arch}
+@item Most specific
+@tab @samp{gives_$@{distrorel@}_$arch}
+@end multitable
+
+@node priority, mask, gives, Keys
+@subsection priority
+Sets the @url{https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities, priority} of a package. It can have the following values if included:
+
+@enumerate
+@item
+@samp{essential}
+
+@item
+@samp{required}
+
+@item
+@samp{important}
+
+@item
+@samp{standard}
+
+@item
+@samp{optional} (default)
+
+@end enumerate
+
+@quotation Caution
+Do not include @samp{priority} unless you know what you're attempting to do.
+@end quotation
+
+@node mask, prepare(), priority, Keys
+@subsection mask
+An array containing @code{apt} or @code{pacstall} package names. Once this package is installed, anything inside @samp{mask} will be prevented from showing up in @code{apt} and @code{pacstall} search results, or anything relating to @code{dpkg}. Once the package is removed, the effect reverses and @samp{mask} contents will be visible again.
+
+@quotation Caution
+Do not use @samp{mask} unless you know what you're doing.
+@end quotation
+
+@node prepare(), build(), mask, Keys
+@subsection prepare()
+This function is run to prepare a package for building. The starting location will always be @samp{$@{srcdir@}}.
+
+@node build(), check(), prepare(), Keys
+@subsection build()
+This function is run to compile/build a package. Use multicore building whenever possible. You get get the amount of cores with the variable @samp{$@{NCPU@}}. The starting location will always be @samp{$@{srcdir@}}.
+
+@node check(), package(), build(), Keys
+@subsection check()
+This function is run to run sanity checks on packages, typically coming from the projects testing suite. The starting location will always be @samp{$@{srcdir@}}.
+
+@node package(), pre_remove(), check(), Keys
+@subsection package()
+This function is used to install the package to its staging area. The most important part of this function is to install to @samp{$@{pkgdir@}}. Check your build system for how to install to a certain root directory. The starting location will always be @samp{$@{srcdir@}}.
+
+@node pre_remove(), , package(), Keys
+@subsection pre_remove()
+This function is run before the a package is removed. It is the @url{https://www.debian.org/doc/debian-policy/ch-maintainerscripts.html, Debian prerm script}.
+
+@node pre_install(), pre_upgrade(), pre_remove(), Keys
+@subsection pre_install()
+This function is run before the deb unpacks onto the system. It is the Debian @samp{preinst} script.
+
+@node pre_upgrade(), post_remove(), pre_install(), Keys
+@subsection pre_upgrade()
+This function works just like @ref{pre_install()}, but runs instead if the package is already on the system. If @samp{pre_install()} is provided but not @ref{pre_upgrade()}, then @samp{pre_install()} runs as pre_upgrade. If only @samp{pre_upgrade()} is provided, then it will not run on initial install, but will on every upgrade after.
+
+@node post_remove(), post_install(), pre_upgrade(), Keys
+@subsection post_remove()
+This function is run after the package is removed. It is the Debian @samp{postrm} script.
+
+@node post_install(), post_upgrade(), post_remove(), Keys
+@subsection post_install()
+This function is run after the package is installed. It is the Debian @samp{postinst} script.
+
+@node post_upgrade(), , post_install(), Keys
+@subsection post_upgrade()
+This function is run after a package upgrade. The same rules from @ref{pre_upgrade()} and @ref{pre_install()} apply for @samp{post_upgrade()} and @ref{post_install()}.
