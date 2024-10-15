@@ -17,7 +17,7 @@ pkgbase="bar" # @xref{pkgbase}
 pkgname=("foo" "barfoo") # @xref{pkgname}
 repology=("project: bar") # @xref{repology}
 arch=('any' 'amd64' 'arm64') # @xref{arch}
-pkgver="1.0.0"
+pkgver="1.0.0" # @xref{pkgver}
 pkgrel="3"
 epoch="4"
 url='https://foo.com/bar'
@@ -114,13 +114,16 @@ post_remove() @{
 
 @node Keys, , Pacscript,
 @section Keys
-Hello mfs.
+This section is dedicated to describing every valid key in a pacscript. You will more than likely not use all of these.
 
 @menu
 * pkgbase:: Split packaging functionality.
 * pkgname:: Naming packages.
 * repology:: Linking package versions.
 * arch:: Controlling architecture building.
+* pkgver:: Controlling versioning.
+* pkgrel:: Control pacscript file versioning.
+* epoch:: Control forcible upgrades.
 @end menu
 
 @node pkgbase, pkgname, Sample Script, Sample Script
@@ -167,7 +170,7 @@ This is what @url{https://github.com/pacstall/pacup, Pacup} uses to get the late
 
 If the repology variable isn't present in the pacscript, Pacup will refuse to update it.
 
-@node arch, , repology, Sample Script
+@node arch, pkgver, repology, Sample Script
 @subsection arch
 This array is used to define what architectures your pacscripts will work on. Besides the usual architecture specifiers, you have available @samp{any} and @samp{all}:
 
@@ -193,10 +196,10 @@ Pacstall supports all architectures that have an @url{https://www.debian.org/por
 @samp{armel}/@samp{arm}
 
 @item
-@samp{armhf}/@samp{armv7h}*
+@samp{armhf}/@samp{armv7h}
 
 @item
-@samp{i386}/@samp{i686}*
+@samp{i386}/@samp{i686}
 
 @item
 @samp{mps64el}
@@ -214,4 +217,20 @@ Pacstall supports all architectures that have an @url{https://www.debian.org/por
 @quotation Important
 @c TODO: ADD SOURCE REFERENCE!
 While both @samp{$CARCH} and @samp{$AARCH} will always be accessible to a pacscript, only one naming scheme may be used in the arch array. This means you cannot mix and match, like @code{arch=('amd64' 'i686')} or @code{arch=('arm64' 'aarch64')}. The naming scheme used will determine which enhanced arrays will be available. See @samp{source} for more on enhanced arrays.
+@end quotation
+
+@node pkgver, pkgrel, arch, Sample Script
+@subsection pkgver
+This is the version number. It should ideally (but not required) be using @url{https://semver.org/, semver}. As long as the version number can be handled by @code{dpkg --validate-version}, it is valid.
+
+@node pkgrel, epoch, pkgver, Sample Script
+@subsection pkgrel
+This is used when you wish to trigger an update on users computers but @ref{pkgver} has not been updated. This could be used if you fix a dependency in a pacscript, or perhaps you forgot to add a line to the building process. It is implicitly set to @samp{1} if not included, and should not be included by default. Every time pkgver is updated, @samp{pkgrel} should be removed.
+
+@node epoch, , pkgrel, Sample Script
+@subsection epoch
+This variable is used to forcibly upgrade a package in any circumstance. In most cases, a @samp{pkgrel} bump will work just fine, but certain circumstances may require an upgrade that breaks @url{https://wiki.archlinux.org/title/PKGBUILD#epoch, normal comparison logic}. It is assumed to be @samp{0} @url{https://www.debian.org/doc/debian-policy/ch-controlfields.html#version, by default}, and if used, should be a small integer.
+
+@quotation Caution
+Use this @emph{sparingly}, as any package using @samp{epoch} cannot remove the @samp{epoch} on the next @samp{pkgver} update.
 @end quotation
