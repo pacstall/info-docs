@@ -1,1 +1,5 @@
 pacstall.info
+*.aux
+*.log
+*.toc
+*.pdf
