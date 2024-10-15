@@ -24,38 +24,38 @@ url='https://foo.com/bar' # @xref{url}
 source=(
   "https://github.com/Elsie19/foo/archive/refs/tags/$@{pkgver@}.zip"
   "https://github.com/Elsie19/foo/archive/refs/tags/foo.desktop"
-)
+) # @xref{source}
 (...)sums=(
     "9cc57f2ca39c2d81aed7e3d82af0b5711863bd3403bb8f024c4c3b4ecf9652a4"
     'SKIP'
-)
-nosubmodules=("foo")
-noextract=("bar")
-depends=("kdenlive")
-makedepends=("ed>=1.20.1" "gcc")
-checkdepends=("just")
+) # @xref{sums}
+nosubmodules=("foo") # @xref{nosubmodules}
+noextract=("bar") # @xref{noextract}
+depends=("kdenlive") # @xref{depends}
+makedepends=("ed>=1.20.1" "gcc") # @xref{makedepends}
+checkdepends=("just") # @xref{checkdepends}
 optdepends=("bar: not foo"
   "alacritty: a blazing fast terminal"
-)
-pacdeps=("dmenu" "tuner")
+) # @xref{optdepends}
+pacdeps=("dmenu" "tuner") # @xref{pacdeps}
 breaks=("libbar-git")
 conflicts=("libfoo-git" "libfoo-bin" "libfoo-app")
 replaces=("alacritty")
 gives="libfoo"
 pkgdesc="Ultimate program capable of foo and bar
-Here is a long description started on a newline."
-backup=('usr/share/pacstall/repo/pacstallrepo')
+Here is a long description started on a newline." # @xref{pkgdesc}
+backup=('usr/share/pacstall/repo/pacstallrepo') # @xref{backup}
 priority='essential'
 maintainer=(
     "Mr. Person <mr.person@@protonmail.com>"
     "Other person <other@@gmail.com>"
-)
+) # @xref{maintainer}
 mask=('fizzle')
 provides=('foo')
 incompatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{incompatible}
 compatible=('debian:stretch' 'debian:sid' '*:jammy' '*:20.04') # @xref{compatible}
-license=('LGPL-2.1-or-later')
-external_connection=true
+license=('LGPL-2.1-or-later') # @xref{license}
+external_connection=true # @xref{external_connection}
 
 prepare() @{
   cd "$@{pkgname@}-$@{pkgver@}"
@@ -117,6 +117,8 @@ post_remove() @{
 This section is dedicated to describing every valid key in a pacscript. You will more than likely not use all of these.
 
 @menu
+---- Package Metadata Variables ----
+
 * pkgbase:: Split packaging functionality.
 * pkgname:: Naming packages.
 * repology:: Linking package versions.
@@ -127,19 +129,45 @@ This section is dedicated to describing every valid key in a pacscript. You will
 * url:: Adding a useful link to project.
 * incompatible:: Declaring package incompatiblities.
 * compatible:: Declaring package compatiblities.
+* pkgdesc:: Adding descriptions to packages.
+* license:: Licensing package.
+* maintainer:: Adding maintainers.
+
+---- Package Sources ----
+
+* source:: Adding sources.
+* sums:: Hashchecking sources.
+* nosubmodules:: Preventing submodules from being cloned.
+* noextract:: Preventing archives from being extracted.
+* backup:: Denoting files as configuration files.
+* external_connection:: Allowing internet connection during packaging.
+
+---- Package Dependencies ----
+
+* depends:: Creating dependency links between packages.
+* makedepends:: Creating build dependency links between packages.
+* checkdepends:: Creating testing dependency links between packages.
+* optdepends:: Creating optional dependency links between packages.
+* pacdeps:: Creating pacstall dependency links between packages.
+
+---- Package Relations ----
+
+(All package relations may use version constraints.)
+
+* breaks:: Denoting package conflicts.
 @end menu
 
-@node pkgbase, pkgname, Sample Script, Sample Script
+@node pkgbase, pkgname, Keys, Keys
 @subsection pkgbase
 If this is not provided in a pacscript, then it is assumed that it is a singular @ref{pkgname}, and a @file{.SRCINFO} file assumes that @ref{pkgbase} is equal to that singular @samp{pkgname}. If using @url{https://wiki.archlinux.org/title/PKGBUILD#pkgbase, package splitting}, @samp{pkgname} is treated like an array, and multiple packages can be built.
 
-To split out the packages, they should define the functions @samp{package_pkgname()}, and can override the following variables inside of them: @samp{gives}, @samp{pkgdesc}, @ref{arch}, @samp{url}, @samp{license}, @samp{depends}, @samp{checkdepends}, @samp{optdepends}, @samp{pacdeps}, @samp{provides}, @samp{checkconflicts}, @samp{conflicts}, @samp{breaks}, @samp{replaces}, @samp{enhances}, @samp{recommends}, @samp{priority}, @samp{backup}, @ref{repology}.
+To split out the packages, they should define the functions @samp{package_pkgname()}, and can override the following variables inside of them: @samp{gives}, @samp{pkgdesc}, @samp{arch}, @samp{url}, @samp{license}, @samp{depends}, @samp{checkdepends}, @samp{optdepends}, @samp{pacdeps}, @samp{provides}, @samp{checkconflicts}, @samp{conflicts}, @samp{breaks}, @samp{replaces}, @samp{enhances}, @samp{recommends}, @samp{priority}, @samp{backup}, @samp{repology}.
 
 @quotation Caution
 In most cases, this should @strong{not} be provided in a pacscript. Only use this for split packages (pacscripts that build multiple packages from the same source).
 @end quotation
 
-@node pkgname, repology, pkgbase, Sample Script
+@node pkgname, repology, pkgbase, Keys
 @subsection pkgname
 This is what Pacstall records as the name of the built package. Use the following naming schema:
 
@@ -167,7 +195,7 @@ If a Pacscript does not fall under any of the categories above, use @file{pkgnam
 The package suffix (@samp{-deb}, @samp{-git}, etc) must match the filename of the pacscript. If @code{pkgname="foo-deb"}, the file must be named @file{foo-deb.pacscript}. If there is no suffix, the file should be named @file{foo.pacscript}.
 @end quotation
 
-@node repology, arch, pkgname, Sample Script
+@node repology, arch, pkgname, Keys
 @subsection repology
 This is what @url{https://github.com/pacstall/pacup, Pacup} uses to get the latest version of your packaged program for updating the pacscript. @xref{Top,,, pacup, The Pacup Manual} to know how to add it to your repository.
 
@@ -218,19 +246,18 @@ Pacstall supports all architectures that have an @url{https://www.debian.org/por
 @end itemize
 
 @quotation Important
-@c TODO: ADD SOURCE REFERENCE!
-While both @samp{$CARCH} and @samp{$AARCH} will always be accessible to a pacscript, only one naming scheme may be used in the arch array. This means you cannot mix and match, like @code{arch=('amd64' 'i686')} or @code{arch=('arm64' 'aarch64')}. The naming scheme used will determine which enhanced arrays will be available. See @samp{source} for more on enhanced arrays.
+While both @samp{$CARCH} and @samp{$AARCH} will always be accessible to a pacscript, only one naming scheme may be used in the arch array. This means you cannot mix and match, like @code{arch=('amd64' 'i686')} or @code{arch=('arm64' 'aarch64')}. The naming scheme used will determine which enhanced arrays will be available. @xref{source} for more on enhanced arrays.
 @end quotation
 
-@node pkgver, pkgrel, arch, Sample Script
+@node pkgver, pkgrel, arch, Keys
 @subsection pkgver
 This is the version number. It should ideally (but not required) be using @url{https://semver.org/, semver}. As long as the version number can be handled by @code{dpkg --validate-version}, it is valid.
 
-@node pkgrel, epoch, pkgver, Sample Script
+@node pkgrel, epoch, pkgver, Keys
 @subsection pkgrel
 This is used when you wish to trigger an update on users computers but @ref{pkgver} has not been updated. This could be used if you fix a dependency in a pacscript, or perhaps you forgot to add a line to the building process. It is implicitly set to @samp{1} if not included, and should not be included by default. Every time pkgver is updated, @samp{pkgrel} should be removed.
 
-@node epoch, url, pkgrel, Sample Script
+@node epoch, url, pkgrel, Keys
 @subsection epoch
 This variable is used to forcibly upgrade a package in any circumstance. In most cases, a @samp{pkgrel} bump will work just fine, but certain circumstances may require an upgrade that breaks @url{https://wiki.archlinux.org/title/PKGBUILD#epoch, normal comparison logic}. It is assumed to be @samp{0} @url{https://www.debian.org/doc/debian-policy/ch-controlfields.html#version, by default}, and if used, should be a small integer.
 
@@ -238,14 +265,286 @@ This variable is used to forcibly upgrade a package in any circumstance. In most
 Use this @emph{sparingly}, as any package using @samp{epoch} cannot remove the @samp{epoch} on the next @samp{pkgver} update.
 @end quotation
 
-@node url, incompatible, epoch, Sample Script
+@node url, incompatible, epoch, Keys
 @subsection url
 This variable is used to show the homepage/website of the package (if any).
 
-@node incompatible, compatible, url, Sample Script
+@node incompatible, compatible, url, Keys
 @subsection incompatible
 This array is a list of distros/versions that cannot be used to build this package, for example due to outdated dependencies. Elements follow a schema of @samp{$distro:$version}, where either @samp{$distro} or @samp{$version} can be a glob character (@samp{*}), but not both. @samp{$version} can be a distro name (@samp{jammy}, @samp{noble}, @samp{sid}, etc) or a version number (@samp{22.04}, @samp{16.04}, etc).
 
-@node compatible, , incompatible, Sample Script
+@node compatible, pkgdesc, incompatible, Keys
 @subsection compatible
 Allowed distros/versions that a package can build on. @xref{incompatible} for more information.
+
+@node pkgdesc, license, compatible, Keys
+@subsection pkgdesc
+This is a variable that sets the description of the package. Try to keep it as close as possible to upstream. This variable can be multi-lined for extended descriptions. Do not end the short description (first line) with a period. For example:
+
+@example
+pkgdesc="Short and Sweet"
+@end example
+
+@example
+pkgdesc="Provide limited super user privileges to specific users
+Sudo is a program designed to allow a sysadmin to give limited root
+privileges to users and log root activity. The basic philosophy is to give
+as few privileges as possible but still allow people to get their work done."
+@end example
+
+@node license, maintainer, pkgdesc, Keys
+@subsection license
+An array of licenses that this package is licensed under. Valid licenses are listed in @url{https://spdx.org/licenses/, SPDX}. Custom licenses can be included with the prefix @samp{custom:}.
+
+@node maintainer, source, license, Keys
+@subsection maintainer
+An array of keys that contain the name and contact email of the package maintainer(s). The primary maintainer of the package should be listed first, and others after them. Subsequent maintainers will be marked as "Uploaders" in the final package. The keys take the form like this:
+
+@example
+"my name <email here>"
+@end example
+
+@node source, sums, maintainer, Keys
+@subsection source
+@c TODO: Add xref.
+This is an array with URLs as elements. These will be downloaded by pacstall before the @samp{prepare()} function. @samp{source} can be created many different ways, and is incredibly powerful in functionality.
+
+Inside a @samp{source} array, you have the following schema:
+
+@itemize
+@item
+Elements can be optionally prefixed with @samp{dest::} which will instruct pacstall to download (or copy) that archive to the name @samp{dest}.
+
+@itemize @minus
+@item
+Note that @samp{dest} is @strong{not} where the final @emph{extracted} output of a download would be, but where the @emph{download} is going to.
+@end itemize
+
+@item
+Git sources must have their URL prefixed with @samp{git+} if the URL does not end with @file{.git}.
+
+@item
+Git sources may end in @samp{#branch=}, @samp{#tag=}, or @samp{#commit=}, followed by their respective contents.
+
+@itemize @minus
+@item
+If this is not provided, then it is assumed to clone from @samp{HEAD} of the repository. This is often the @samp{master} or @samp{main} branch.
+@end itemize
+
+@item
+To use sources relative in location to the pacscript, there are two main options:
+
+@itemize @minus
+@item
+Use @samp{file://} for installing local archives relative to the pacscript. Generally will look like @samp{file://$@{PWD@}/example.zip} or @samp{file:///home/pacstall/example.zip}.
+
+@item
+For installing files relative to the pacscript from the @samp{pacstall-programs} repository, list the file plainly, like @samp{"example.desktop"}. The file should be stored in the same folder as the pacscript, in @samp{packages/$@{pkgname@}/}. This is useful for avoiding large echos in pacscripts, but should only be used for standard text files, or potentially small images for icons. Larger archives should be stored externally.
+@end itemize
+
+@item
+Deb sources can only be provided one entry. More complex array options are described below.
+
+@end itemize
+
+An example with every option added (not functional) would look like:
+
+@example
+custom-location.zip::git+file://example.com/archive.tar.xz?h=file#branch=master
+@end example
+
+Extraction method is calculated from the initial url basename and not @samp{dest}, so an example like above would still extract with the correct method. The following extensions can be extracted by default:
+
+@itemize
+@item
+@samp{*.zip}
+
+@item
+@samp{*.tar.gz}/@samp{*.tgz}
+
+@item
+@samp{*.tar.bz2}/@samp{*.tbz2}
+
+@item
+@samp{*.tar.bz}/@samp{*.tbz}
+
+@item
+@samp{*.tar.zst}/@samp{*.tzst}
+
+@item
+@samp{*.gz}
+
+@item
+@samp{*.bz2}
+
+@item
+@samp{*.xz}
+
+@item
+@samp{*.lz}
+
+@item
+@samp{*.lzma}
+
+@item
+@samp{*.zst}
+
+@item
+@samp{*.7z}
+
+@item
+@samp{*.rar}
+
+@item
+@samp{*.lz4}
+
+@item
+@samp{*.tar}
+
+@end itemize
+
+@c TODO: NOEXTRACT
+If using an archive that contains a @samp{*.tar.*} extension that is not covered by any of the above listed, pacstall will attempt to extract it with the regular @samp{*.tar} method. If pacstall does not recognize the extension, it will not try to extract it. If you do not want to extract a certain source, see @samp{noextract}.
+
+You may define architecture specific sources like @samp{source_$arch}, and you can define distro sources like @samp{source_$DISTRO}, where @samp{$DISTRO} can be either @samp{ubuntu} or @samp{debian}, or a codename of a release, such as @samp{jammy} or @samp{bookworm}. If you want to combine both a distro and architecture, you may do @samp{source_$@{DISTRO@}_$@{arch@}}. A CI maintained file in @url{https://github.com/pacstall/pacstall-programs/blob/master/distrolist, pacstall/pacstall-programs} will provide an up-to-date list of the supported releases.
+
+Enhanced arrays can also be used in conjunction with the existing normal arrays, as a way to append. They append in order of increasing specificity:
+
+@multitable @columnfractions .25 .39
+@headitem Order @tab Array
+@item Least specific
+@tab @samp{source}
+@item
+@tab @samp{source_$arch}
+@item
+@tab @samp{source_$distrobase}
+@item
+@tab @samp{source_$distrorel}
+@item
+@tab @samp{source_$@{distrobase@}_$arch}
+@item Most specific
+@tab @samp{source_$@{distrorel@}_$arch}
+@end multitable
+
+@quotation Important
+@samp{-deb} packages can only use one source entry. Use the enhanced arrays to provide for multiple targets. For @samp{-deb} packages, enhanced @samp{source} and @ref{sums} arrays will override instead of append. This is not the case for the other enhanced arrays.
+@end quotation
+
+@node sums, nosubmodules, source, Keys
+@subsection sums
+These sets of arrays are used in relation to @samp{source} and are used to verify the integrity of the downloaded package. The following hashing programs can be used for the name of the sums array:
+
+@enumerate
+@item
+@samp{sha256sums}
+
+@item
+@samp{sha512sums}
+
+@item
+@samp{sha384sums}
+
+@item
+@samp{sha224sums}
+
+@item
+@samp{sha1sums}
+
+@item
+@samp{md5sums}
+
+@item
+@samp{b2sums}
+@end enumerate
+
+Along with these sums arrays, the same @samp{$arch} and @samp{$DISTRO} rules from @samp{source} apply.
+
+If you do not wish to check the hash of a certain file, you may put @samp{SKIP} as the element corresponding to the location of the file in @samp{source}.
+
+@node nosubmodules, noextract, sums, Keys
+@subsection nosubmodules
+Use this array to prevent pacstall from cloning submodules for any source array with @samp{dest} where @samp{dest} is included in this array. For example:
+
+@example
+source=(
+  "rpk::https://github.com/rhino-linux/rhino-pkg.git"
+  "https://github.com/tamton-aquib/stuff.nvim.git"
+)
+nosubmodules=("rpk" "stuff.nvim")
+@end example
+
+@node noextract, backup, nosubmodules, Keys
+@subsection noextract
+Use this array like you would with @ref{nosubmodules} except this is for when you do not want a source to be extracted.
+
+@node backup, external_connection, noextract, Keys
+@subsection backup
+In @code{dpkg}, files in @file{/etc} are set as "configuration files", meaning that by default they will not be removed when one runs apt remove pkg, but will with @code{apt purge pkg}. This array should be filled with file paths (without the leading slash), and every file in it will be set as a configuration file. Do not include any files that will be unpacked in @file{/etc}, as that is already handled by @code{dpkg}.
+
+There is one special exception you may add to a key, and that is a leading @samp{r:}, which instructs @code{dpkg} to delete that file on the next upgrade (generally used for outdated config files). If you include @samp{r:} in a key, that file @emph{cannot} appear in the binary package.
+
+@node external_connection, depends, backup, Keys
+@subsection external_connection
+@c TODO: PACKAGING FUNCTIONS
+Because Pacstall runs builds in an isolated environment, internet connection is by default not permitted inside of the packaging functions. If a package needs to connect to the internet for these functions (often for @code{cargo} builds, certain @code{python} builds, and occasionally making a git connection), the variable @code{external_connection=true} must be provided. By default, this is not included, and is assumed @code{false}.
+
+@node depends, makedepends, external_connection, Keys
+@subsection depends
+This is an array used to declare runtime dependencies of a package. As with @ref{source}, this array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}. Along with that, you can @emph{also} add version constraints, which take the following schema:
+
+@enumerate
+
+@item
+Any dependency can optionally have the following format:
+
+@enumerate
+@item
+@samp{pkg>=version}
+
+@item
+@samp{pkg<=version}
+
+@item
+@samp{pkg>version}
+
+@item
+@samp{pkg<version}
+
+@item
+@samp{pkg=version}
+@end enumerate
+
+@item
+@c TODO: PACDEPS
+Dependencies can be alternative, so that if the first package cannot be found or it's dependency constraints cannot be satisfied, will attempt to find the alternative package: @samp{pkg | pkg2}. These constraints apply to all dependency arrays, with the exception of pacdeps.
+
+@end enumerate
+
+@node makedepends, checkdepends, depends, Keys
+@subsection makedepends
+This is an array used to declare build-time dependencies. Everything from @ref{depends} apply here.
+
+@node checkdepends, optdepends, makedepends, Keys
+@subsection checkdepends
+@c TODO: CHECK FUNCTION
+This is an array used to declare dependencies needed for testing in the @samp{check} function. These are installed at the same time as @ref{makedepends}. Everything from @ref{depends} apply here.
+
+@node optdepends, pacdeps, checkdepends, Keys
+@subsection optdepends
+This is an array used to declare optional dependencies. Everything from @ref{depends} apply here, with one addition, that being the requirement of a description, which takes the form of @samp{pkg: description here}. Remember that @samp{pkg} in this case can take any version constraint, including an alternative, so this is valid:
+
+@example
+"libidk:i386<5.2.3 | libidk:i386>1.2.5: provides libidk support"
+@end example
+
+If at build time the user decides not to install a package in @samp{optdepends}, it will be logged as @url{https://www.debian.org/doc/debian-policy/ch-relationships.html#binary-dependencies-depends-recommends-suggests-enhances-pre-depends, Suggests}.
+
+@node pacdeps, breaks, optdepends, Keys
+@subsection pacdeps
+This is an array that is used to declare dependencies on other pacstall packages. Functionally, they will be installed like @ref{makedepends} (before building) and will be logged like @ref{depends} (required). Unlike the other @samp{*depends} arrays, these cannot use version constraints, but may still be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
+
+@node breaks, , pacdeps, Keys
+@subsection breaks
+This is an array that declares packages that cannot be installed alongside this package. Any package declared in @ref{breaks} can be unpacked alongside this package, but both cannot exist. Essentially, this is what you should use to declare incompatibilities between packages that do @emph{not} have file path conflicts.
+
+This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.

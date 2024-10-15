@@ -20,6 +20,11 @@ This manual is for pacstall @value{VERSION} and is freely distributed under the 
 @author Pacstall Team
 @end titlepage
 
+@dircategory General Commands
+@direntry
+* pacstall: pacstall
+@end direntry
+
 @contents
 
 @node Top, Introduction, , (dir)
