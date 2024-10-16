@@ -1,6 +1,38 @@
 @node Commands, Files, Top, Top
 @chapter Commands
-This is the content of the first chapter.
+This is the pacstall command reference page.
 
-@section First Section
-Here is a section within the first chapter.
+@menu
+---- Managing Packages ----
+
+* Installing Packages:: All commands relating to installing packages.
+
+---- Miscellaneous ----
+
+* Environmental Flags:: Flags that affect other flags.
+@end menu
+
+@node Installing Packages, -I, Commands, Commands
+@section Installing Packages
+
+@menu
+* -I:: Install a package.
+@end menu
+
+@node -I, , Installing Packages,
+@section -I
+@code{pacstall -I} is the primary command used to install packages:
+
+@example
+@command{pacstall} [@option{-P -K -B -Q -Nc -Ns}] -I @var{package}@enddots{}
+@end example
+
+@node Environmental Flags, , Commands, Commands
+@section Environmental Flags
+
+@menu
+* -P:: Disable prompts.
+@end menu
+
+@node -P, , Environmental Flags,
+@section -P
