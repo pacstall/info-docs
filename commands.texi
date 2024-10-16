@@ -10,6 +10,7 @@ This is the pacstall command reference page.
 ---- Miscellaneous ----
 
 * Environmental Flags:: Flags that affect other flags.
+* Environmental Variables:: Variables that affect pacstall.
 @end menu
 
 @node Installing Packages, -I, Commands, Commands
@@ -27,6 +28,19 @@ This is the pacstall command reference page.
 @command{pacstall} [@option{-P -K -B -Q -Nc -Ns}] -I @var{package}@enddots{}
 @end example
 
+@samp{-I} can take any environmental flags (@pxref{Environmental Flags}).
+
+This flag installs a given package from a remote repository or a local @ref{Pacscript}. As of now, these are the providers that @samp{-I} has enhanced syntax for targeting repositories:
+
+@itemize
+@item @samp{github}
+@item @samp{gitlab}
+@item @samp{sourcehut}
+@item @samp{codeberg}
+@end itemize
+
+Other git providers may use a direct link or submit a patch to add yours. Those providers must be added beforehand to the @ref{pacstallrepo} with @ref{-A}. If multiple repositories are enabled, pacstall will default to @samp{pacstall/pacstall-programs}, but you can still choose to install from other repositories. You may also specify a local pacscript by including the @file{.pacscript} suffix.
+
 @node Environmental Flags, , Commands, Commands
 @section Environmental Flags
 
@@ -36,3 +50,14 @@ This is the pacstall command reference page.
 
 @node -P, , Environmental Flags,
 @section -P
+
+@node Environmental Variables, DISABLE_PROMPTS, Commands, Commands
+@section Environmental Variables
+
+@menu
+* DISABLE_PROMPTS:: Disable prompts.
+@end menu
+
+@node DISABLE_PROMPTS, , Environmental Variables,
+@section DISABLE_PROMPTS
+Yo

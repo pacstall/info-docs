@@ -207,24 +207,13 @@ In most cases, this should @strong{not} be provided in a pacscript. Only use thi
 @subsection pkgname
 This is what Pacstall records as the name of the built package. Use the following naming schema:
 
-@itemize @bullet
-@item
-Keep it lowercase
-
-@item
-Pacscripts that install from a @samp{deb} file should be called @file{pkgname-deb}
-
-@item
-Pacscripts that install from a git repository should be called @file{pkgname-git}
-
-@item
-Pacscripts that install from an appimage should be called @file{pkgname-app}
-
-@item
-Pacscripts that install the binary of the package should be called @file{pkgname-bin}
-
-@item
-If a Pacscript does not fall under any of the categories above, use @file{pkgname}
+@itemize
+@item Keep it lowercase
+@item Pacscripts that install from a @samp{deb} file should be called @file{pkgname-deb}
+@item Pacscripts that install from a git repository should be called @file{pkgname-git}
+@item Pacscripts that install from an appimage should be called @file{pkgname-app}
+@item Pacscripts that install the binary of the package should be called @file{pkgname-bin}
+@item If a Pacscript does not fall under any of the categories above, use @file{pkgname}
 @end itemize
 
 @quotation Important
@@ -252,33 +241,16 @@ Two variables, @samp{$CARCH} and @samp{$AARCH} are also available to you, and ar
 
 Pacstall supports all architectures that have an @url{https://www.debian.org/ports/, official Debian port}. These are currently:
 
-@itemize @bullet
-@item
-@samp{amd64}/@samp{x86_64}
-
-@item
-@samp{arm64}/@samp{aarch64}
-
-@item
-@samp{armel}/@samp{arm}
-
-@item
-@samp{armhf}/@samp{armv7h}
-
-@item
-@samp{i386}/@samp{i686}
-
-@item
-@samp{mps64el}
-
-@item
-@samp{ppc64el}
-
-@item
-@samp{riscv64}
-
-@item
-@samp{s390x}
+@itemize
+@item @samp{amd64}/@samp{x86_64}
+@item @samp{arm64}/@samp{aarch64}
+@item @samp{armel}/@samp{arm}
+@item @samp{armhf}/@samp{armv7h}
+@item @samp{i386}/@samp{i686}
+@item @samp{mps64el}
+@item @samp{ppc64el}
+@item @samp{riscv64}
+@item @samp{s390x}
 @end itemize
 
 @quotation Important
@@ -348,38 +320,28 @@ This is an array with URLs as elements. These will be downloaded by pacstall bef
 Inside a @samp{source} array, you have the following schema:
 
 @itemize
-@item
-Elements can be optionally prefixed with @samp{dest::} which will instruct pacstall to download (or copy) that archive to the name @samp{dest}.
+@item Elements can be optionally prefixed with @samp{dest::} which will instruct pacstall to download (or copy) that archive to the name @samp{dest}.
 
 @itemize @minus
-@item
-Note that @samp{dest} is @strong{not} where the final @emph{extracted} output of a download would be, but where the @emph{download} is going to.
+@item Note that @samp{dest} is @strong{not} where the final @emph{extracted} output of a download would be, but where the @emph{download} is going to.
 @end itemize
 
-@item
-Git sources must have their URL prefixed with @samp{git+} if the URL does not end with @file{.git}.
-
-@item
-Git sources may end in @samp{#branch=}, @samp{#tag=}, or @samp{#commit=}, followed by their respective contents.
+@item Git sources must have their URL prefixed with @samp{git+} if the URL does not end with @file{.git}.
+@item Git sources may end in @samp{#branch=}, @samp{#tag=}, or @samp{#commit=}, followed by their respective contents.
 
 @itemize @minus
-@item
-If this is not provided, then it is assumed to clone from @samp{HEAD} of the repository. This is often the @samp{master} or @samp{main} branch.
+@item If this is not provided, then it is assumed to clone from @samp{HEAD} of the repository. This is often the @samp{master} or @samp{main} branch.
 @end itemize
 
-@item
-To use sources relative in location to the pacscript, there are two main options:
+@item To use sources relative in location to the pacscript, there are two main options:
 
 @itemize @minus
-@item
-Use @samp{file://} for installing local archives relative to the pacscript. Generally will look like @samp{file://$@{PWD@}/example.zip} or @samp{file:///home/pacstall/example.zip}.
+@item Use @samp{file://} for installing local archives relative to the pacscript. Generally will look like @samp{file://$@{PWD@}/example.zip} or @samp{file:///home/pacstall/example.zip}.
 
-@item
-For installing files relative to the pacscript from the @samp{pacstall-programs} repository, list the file plainly, like @samp{"example.desktop"}. The file should be stored in the same folder as the pacscript, in @samp{packages/$@{pkgname@}/}. This is useful for avoiding large echos in pacscripts, but should only be used for standard text files, or potentially small images for icons. Larger archives should be stored externally.
+@item For installing files relative to the pacscript from the @samp{pacstall-programs} repository, list the file plainly, like @samp{"example.desktop"}. The file should be stored in the same folder as the pacscript, in @samp{packages/$@{pkgname@}/}. This is useful for avoiding large echos in pacscripts, but should only be used for standard text files, or potentially small images for icons. Larger archives should be stored externally.
 @end itemize
 
-@item
-Deb sources can only be provided one entry. More complex array options are described below.
+@item Deb sources can only be provided one entry. More complex array options are described below.
 
 @end itemize
 
@@ -392,51 +354,21 @@ custom-location.zip::git+file://example.com/archive.tar.xz?h=file#branch=master
 Extraction method is calculated from the initial url basename and not @samp{dest}, so an example like above would still extract with the correct method. The following extensions can be extracted by default:
 
 @itemize
-@item
-@samp{*.zip}
-
-@item
-@samp{*.tar.gz}/@samp{*.tgz}
-
-@item
-@samp{*.tar.bz2}/@samp{*.tbz2}
-
-@item
-@samp{*.tar.bz}/@samp{*.tbz}
-
-@item
-@samp{*.tar.zst}/@samp{*.tzst}
-
-@item
-@samp{*.gz}
-
-@item
-@samp{*.bz2}
-
-@item
-@samp{*.xz}
-
-@item
-@samp{*.lz}
-
-@item
-@samp{*.lzma}
-
-@item
-@samp{*.zst}
-
-@item
-@samp{*.7z}
-
-@item
-@samp{*.rar}
-
-@item
-@samp{*.lz4}
-
-@item
-@samp{*.tar}
-
+@item @samp{*.zip}
+@item @samp{*.tar.gz}/@samp{*.tgz}
+@item @samp{*.tar.bz2}/@samp{*.tbz2}
+@item @samp{*.tar.bz}/@samp{*.tbz}
+@item @samp{*.tar.zst}/@samp{*.tzst}
+@item @samp{*.gz}
+@item @samp{*.bz2}
+@item @samp{*.xz}
+@item @samp{*.lz}
+@item @samp{*.lzma}
+@item @samp{*.zst}
+@item @samp{*.7z}
+@item @samp{*.rar}
+@item @samp{*.lz4}
+@item @samp{*.tar}
 @end itemize
 
 @c TODO: NOEXTRACT
@@ -448,18 +380,12 @@ Enhanced arrays can also be used in conjunction with the existing normal arrays,
 
 @multitable @columnfractions .25 .39
 @headitem Order @tab Array
-@item Least specific
-@tab @samp{source}
-@item
-@tab @samp{source_$arch}
-@item
-@tab @samp{source_$distrobase}
-@item
-@tab @samp{source_$distrorel}
-@item
-@tab @samp{source_$@{distrobase@}_$arch}
-@item Most specific
-@tab @samp{source_$@{distrorel@}_$arch}
+@item Least specific @tab @samp{source}
+@item @tab @samp{source_$arch}
+@item @tab @samp{source_$distrobase}
+@item @tab @samp{source_$distrorel}
+@item @tab @samp{source_$@{distrobase@}_$arch}
+@item Most specific @tab @samp{source_$@{distrorel@}_$arch}
 @end multitable
 
 @quotation Important
@@ -471,26 +397,13 @@ Enhanced arrays can also be used in conjunction with the existing normal arrays,
 These sets of arrays are used in relation to @samp{source} and are used to verify the integrity of the downloaded package. The following hashing programs can be used for the name of the sums array:
 
 @enumerate
-@item
-@samp{sha256sums}
-
-@item
-@samp{sha512sums}
-
-@item
-@samp{sha384sums}
-
-@item
-@samp{sha224sums}
-
-@item
-@samp{sha1sums}
-
-@item
-@samp{md5sums}
-
-@item
-@samp{b2sums}
+@item @samp{sha256sums}
+@item @samp{sha512sums}
+@item @samp{sha384sums}
+@item @samp{sha224sums}
+@item @samp{sha1sums}
+@item @samp{md5sums}
+@item @samp{b2sums}
 @end enumerate
 
 Along with these sums arrays, the same @samp{$arch} and @samp{$DISTRO} rules from @samp{source} apply.
@@ -530,24 +443,14 @@ This is an array used to declare runtime dependencies of a package. As with @ref
 
 @enumerate
 
-@item
-Any dependency can optionally have the following format:
+@item Any dependency can optionally have the following format:
 
 @enumerate
-@item
-@samp{pkg>=version}
-
-@item
-@samp{pkg<=version}
-
-@item
-@samp{pkg>version}
-
-@item
-@samp{pkg<version}
-
-@item
-@samp{pkg=version}
+@item @samp{pkg>=version}
+@item @samp{pkg<=version}
+@item @samp{pkg>version}
+@item @samp{pkg<version}
+@item @samp{pkg=version}
 @end enumerate
 
 @item
@@ -659,16 +562,11 @@ This variable can be enhanced by @samp{$arch} and/or @samp{$DISTRO}. @emph{Howev
 @headitem Order @tab Variable
 @item Least specific
 @tab @samp{gives}
-@item
-@tab @samp{gives_$arch}
-@item
-@tab @samp{gives_$distrobase}
-@item
-@tab @samp{gives_$distrorel}
-@item
-@tab @samp{gives_$@{distrobase@}_$arch}
-@item Most specific
-@tab @samp{gives_$@{distrorel@}_$arch}
+@item @tab @samp{gives_$arch}
+@item @tab @samp{gives_$distrobase}
+@item @tab @samp{gives_$distrorel}
+@item @tab @samp{gives_$@{distrobase@}_$arch}
+@item Most specific @tab @samp{gives_$@{distrorel@}_$arch}
 @end multitable
 
 @node priority, mask, gives, Keys
@@ -676,20 +574,11 @@ This variable can be enhanced by @samp{$arch} and/or @samp{$DISTRO}. @emph{Howev
 Sets the @url{https://www.debian.org/doc/debian-policy/ch-archive.html#s-priorities, priority} of a package. It can have the following values if included:
 
 @enumerate
-@item
-@samp{essential}
-
-@item
-@samp{required}
-
-@item
-@samp{important}
-
-@item
-@samp{standard}
-
-@item
-@samp{optional} (default)
+@item @samp{essential}
+@item @samp{required}
+@item @samp{important}
+@item @samp{standard}
+@item @samp{optional} (default)
 
 @end enumerate
 
