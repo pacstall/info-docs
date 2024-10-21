@@ -3,9 +3,10 @@
 This is the pacstall command reference page.
 
 @menu
----- Managing Packages ----
+---- Managing & Interacting with Packages ----
 
-* Handling Packages:: All commands relating to handling packages.
+* Handling Packages::     All commands relating to handling packages.
+* Handling Repositories:: All commands relating to handling repositories.
 
 ---- Miscellaneous ----
 
@@ -16,11 +17,18 @@ This is the pacstall command reference page.
 @node Handling Packages, -I, Commands, Commands
 @section Handling Packages
 
+These flags are used to directly or indirectly reference packages.
+
 @menu
 * -I::  Install a package.
 * -R::  Remove a package.
 * -S::  Search for a package.
 * -Sd:: Search description for a package.
+* -Si:: Show SRCINFO contents for a package.
+* -Up:: Upgrade packages.
+* -Ci:: Display installed package metadata.
+* -L::  List installed packages.
+* -Qa:: Test a package from a PR.
 @end menu
 
 @node -I, -R, Handling Packages, Handling Packages
@@ -42,8 +50,7 @@ This flag installs a given package from a remote repository or a local @ref{Pacs
 @item @samp{codeberg}
 @end itemize
 
-@c TODO: -A
-Other git providers may use a direct link or submit a patch to add yours. Those providers must be added beforehand to the @ref{pacstallrepo} with @samp{-A}. If multiple repositories are enabled, pacstall will default to @samp{pacstall/pacstall-programs}, but you can still choose to install from other repositories.
+Other git providers may use a direct link or submit a patch to add yours. Those providers must be added beforehand to the @ref{pacstallrepo} with @ref{-A}. If multiple repositories are enabled, pacstall will default to @samp{pacstall/pacstall-programs}, but you can still choose to install from other repositories.
 
 You may also specify a local pacscript by including the @file{.pacscript} suffix.
 
@@ -80,7 +87,7 @@ $ pacstall -I parent:@strong{$child} # Install only the pkgname @strong{child} f
 @code{pacstall -R} is the primary way to remove a given package from the system:
 
 @example
-@command{pacstall} -R @var{package}
+@command{pacstall} [@option{-P}] -R @var{package}
 @end example
 
 @node -S, -Sd, -R, Handling Packages
@@ -103,7 +110,7 @@ $ pacstall -S -git # Search for all git packages
 $ pacstall -S "-bin@@github:user/reponame" # Search for all binary packages in a specific repo
 @end example
 
-@node -Sd, , -S, Handling Packages
+@node -Sd, -Si, -S, Handling Packages
 @section -Sd
 @code{pacstall -Sd} is one of the ways to search for a given package with description searching:
 
@@ -121,23 +128,211 @@ $ pacstall -Sd browser # Search for 'browser' in name and description of package
 $ pacstall -Sd "'Browser'" # Search for the literal string 'Browser' in name and description
 @end example
 
+@node -Si, -Up, -Sd, Handling Packages
+@section -Si
+@code{pacstall -Si} is one of the ways to display a given package's @url{https://wiki.archlinux.org/title/.SRCINFO, SRCINFO} contents.
+
+@example
+@command{pacstall} -Si @var{package}
+@end example
+
+Alongside the simple invocation, this flag can take packages just like @ref{-I}.
+
+@node -Up, -Ci, -Si, Handling Packages
+@section -Up
+@code{pacstall -Up} is the primary method to upgrade packages.
+
+@example
+@command{pacstall} [@option{-P -K}] -Up
+@end example
+
+@node -Ci, -L, -Up, Handling Packages
+@section -Ci
+Display metadata of an installed package:
+
+@example
+@command{pacstall} -Ci @var{package} @option{key}
+@end example
+
+If no @option{key} is passed, terminal output will include all metadata values. If @option{key} is included, terminal output will only have the referenced key contents displayed.
+
+@example
+$ pacstall -Ci neofetch # Display metadata for neofetch
+@end example
+
+@example
+$ pacstall -Ci firefox-bin version # Display version of firefox-bin
+@end example
+
+@node -L, -Qa, -Ci, Handling Packages
+@section -L
+List installed packages.
+
+The output can come in two forms. If pacstall detects it is being piped, it will print a newline separated list of package names, which is useful for scripting. If pacstall is not being piped, it will print every package with some useful metadata. This second form is @strong{not} useful for scripting and should @strong{not} be used for it.
+
+@node -Qa, , -L, Handling Packages
+@section -Qa
+Test a package from a PR downstream before merging.
+
+@example
+@command{pacstall} -Qa @var{package}#@var{number}@@@var{metalink}
+@end example
+
+Where the @var{package} is given first, followed by the pull request @var{number}, separated by a @samp{#}.
+
+Optionally, a metalink separated by a @samp{@@} may be provided before or after @var{number}. The metalink is broken down into 3 parts:
+
+@itemize
+@item @samp{provider}
+@item @samp{owner}
+@item @samp{repo}
+@end itemize
+
+The @samp{owner} should be the owner of the repository the PR is being merged into, @strong{not} the user who created the PR. No other flags should be provided to this command.
+
+@example
+$ pacstall -Qa firefox-bin#5853
+@end example
+
+@example
+$ pacstall -Qa firefox-bin#5853@@github:pacstall/pacstall-programs
+@end example
+
+@node Handling Repositories, , Commands, Commands
+@section Handling Repositories
+
+These commands are used to deal with repositories.
+
+@menu
+* -A::  Add repositories.
+* -Rr:: Remove a repository.
+@end menu
+
+@node -A, -Rr, Handling Repositories, Handling Repositories
+@section -A
+This is the primary method of adding repositories to pacstall.
+
+If a plain GitHub or GitLab link is given without a @samp{branch}, pacstall will default to @samp{master}. Local repositories are also supported, which can be useful for testing pacscripts without pushing remotely, having portable repositories on a USB stick, custom/private applications, internal company repositories, etc. Additionally, an @ref{alias} can be optionally linked to a repository, so that it is easier to call and reference from. The following command are valid ways to add a repository:
+
+@example
+$ pacstall -A https://github.com/@emph{user}/@emph{repo}
+@end example
+
+@example
+$ pacstall -A https://github.com/@emph{user}/@emph{repo}/tree/@emph{branch}
+@end example
+
+@example
+$ pacstall -A github:@emph{user}/@emph{repo}
+@end example
+
+@example
+$ pacstall -A github:@emph{user}/@emph{repo}#@emph{branch}
+@end example
+
+@example
+$ pacstall -A github:@emph{user}/@emph{repo} @@@emph{alias}
+@end example
+
+These forms above can be duplicated for @samp{gitlab}, @samp{gitlab}, @samp{sourcehut}, and @samp{codeberg}.
+
+@example
+$ pacstall -A file://home/user/local-repository
+@end example
+
+@example
+$ pacstall -A /home/user/local-repository
+@end example
+
+@example
+$ pacstall -A local:/home/user/local-repository
+@end example
+
+@example
+$ pacstall -A https://myonlinerepo.com/here
+@end example
+
+@node -Rr, , Handling Repositories, Handling Repositories
+@section -Rr
+Remove a given repository from pacstall. @xref{-A} for syntax usage. Passing only an alias is valid here as well:
+
+@example
+@command{pacstall} -Rr [@var{repo} | @@@option{alias}]
+@end example
+
+@example
+$ pacstall -Rr github:pacstall/pacstall # Remove main repository
+@end example
+
+@example
+$ pacstall -Rr @@piracy # For when you get caught by the feds
+@end example
+
 @node Environmental Flags, , Commands, Commands
 @section Environmental Flags
 
+These flags are used to modify the functionality of other flags.
+
 @menu
-* -P:: Disable prompts.
+* -P::  Disable prompts.
+* -K::  Keep build files after finishing.
+* -B::  Build deb file only.
+* -Q::  Quiet downloading.
+* -Nc:: Skip check() when building.
+* -Ns:: Build without bwrap.
 @end menu
 
-@node -P, , Environmental Flags,
+@node -P, -K, Environmental Flags,
 @section -P
+If included, this will default all prompts to their default given value.
+
+@node -K, -B, -P, Environmental Flags
+@section -K
+Keep the build of a package if the build process fails or succeeds.
+
+@node -B, -Q, -K, Environmental Flags
+@section -B
+Only build the deb file, but do not install. This is useful for shipping software outside of pacstall.
+
+@node -Q, -Nc, -B, Environmental Flags
+@section -Q
+Silence any download output.
+
+@node -Nc, -Ns, -Q, Environmental Flags
+@section -Nc
+Skip @ref{check()} function when building package.
+
+@node -Ns, , -Nc, Environmental Flags
+@section -Ns
+Build package without using @command{bwrap} system. This flag should be used with caution, and can lead to potential unwanted harm on a system. It is primarily intended for uses in environments such as @command{chroot}, @command{docker}, or WSL which have some primitive level of isolation or fundamental incompatibility with certain kernel features.
 
 @node Environmental Variables, DISABLE_PROMPTS, Commands, Commands
 @section Environmental Variables
 
 @menu
 * DISABLE_PROMPTS:: Disable prompts.
+* PACSTALL_SUPPRESS_SOLUTIONS:: Remove suggestions given by Pacstall to fix problems.
+* PACSTALL_BUILD_CORES:: Override build core count.
+* PACSTALL_EDITOR:: Override editor used by pacstall.
+* NO_COLOR:: Turn off all output colors.
 @end menu
 
-@node DISABLE_PROMPTS, , Environmental Variables,
+@node DISABLE_PROMPTS, PACSTALL_SUPPRESS_SOLUTIONS, Environmental Variables,
 @section DISABLE_PROMPTS
-Yo
+Functionally the same as @ref{-P} but in a variable form.
+
+@node PACSTALL_SUPPRESS_SOLUTIONS, PACSTALL_BUILD_CORES, DISABLE_PROMPTS, Environmental Variables
+@section PACSTALL_SUPPRESS_SOLUTIONS
+Set this to any value to remove suggestions given by Pacstall to fix problems. This would most likely be used in a CI where extra output is not needed.
+
+@node PACSTALL_BUILD_CORES, , PACSTALL_SUPPRESS_SOLUTIONS, Environmental Variables
+@section PACSTALL_BUILD_CORES
+If set to a valid integer, this will override @command{nproc} output and the @var{$NCPU} variable used in many pacscripts.
+
+@node PACSTALL_EDITOR, NO_COLOR, PACSTALL_BUILD_CORES, Environmental Variables
+@section PACSTALL_EDITOR
+Set to a valid command name to override the editor pacstall will use when editing text files (installing pacscripts).
+
+@node NO_COLOR, , PACSTALL_EDITOR, Environmental Variables
+@section NO_COLOR
+Set to any value to turn off all output colors in pacstall.
