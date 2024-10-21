@@ -372,7 +372,7 @@ Extraction method is calculated from the initial url basename and not @samp{dest
 
 If using an archive that contains a @samp{*.tar.*} extension that is not covered by any of the above listed, pacstall will attempt to extract it with the regular @samp{*.tar} method. If pacstall does not recognize the extension, it will not try to extract it. If you do not want to extract a certain source, @ref{noextract}.
 
-You may define architecture specific sources like @samp{source_$arch}, and you can define distro sources like @samp{source_$DISTRO}, where @samp{$DISTRO} can be either @samp{ubuntu} or @samp{debian}, or a codename of a release, such as @samp{jammy} or @samp{bookworm}. If you want to combine both a distro and architecture, you may do @samp{source_$@{DISTRO@}_$@{arch@}}. A CI maintained file in @url{https://github.com/pacstall/pacstall-programs/blob/master/distrolist, pacstall/pacstall-programs} will provide an up-to-date list of the supported releases.
+You may define architecture specific sources like @samp{source_$arch}, and you can define distro sources like @samp{source_$DISTRO}, where @samp{$DISTRO} can be either @samp{ubuntu} or @samp{debian}, or a codename of a release, such as @samp{jammy} or @samp{bookworm}. If you want to combine both a distro and architecture, you may do @samp{source_$@{DISTRO@}_$@{arch@}}. A CI maintained file in @url{@value{GITHUBREPOURL}/blob/master/distrolist, @value{SHORTHANDREPO}} will provide an up-to-date list of the supported releases.
 
 Enhanced arrays can also be used in conjunction with the existing normal arrays, as a way to append. They append in order of increasing specificity:
 

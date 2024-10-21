@@ -2,6 +2,28 @@
 @chapter Repo
 This chapter is a reference for creating, maintaining, and using repositories.
 
-@c @menu
-@c * FIX:: All commands relating to handling packages.
-@c @end menu
+@section Repository Structure
+
+The structure of a repository should look something like this:
+
+@example
+package-repository/
+├── packages/
+│   ├── example-package1/
+│   │   ├── example-package1.pacscript
+│   │   └── .SRCINFO
+│   └── example-package2/
+│       ├── example-package2.pacscript
+│       └── .SRCINFO
+├── scripts/
+│   ├── srcinfo.sh
+│   ├── custom-script1.sh
+│   └── custom-script2.sh
+├── distrolist
+├── packagelist
+└── srclist
+@end example
+
+Some sort of GitHub Action like tool is recommended as well for package testing across swathes of distros and configurations.
+
+Additionally, the use of pre-commit hooks are highly recommended, but not required. Generally, the @url{@value{GITHUBREPOURL}} team uses pre-commit hooks for formatting scripts, updating the @file{packagelist} file, and updating both the package @file{.SRCINFO} and the global @file{srclist}.

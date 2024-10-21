@@ -5,8 +5,9 @@ This is the pacstall command reference page.
 @menu
 ---- Managing & Interacting with Packages ----
 
-* Handling Packages::     All commands relating to handling packages.
-* Handling Repositories:: All commands relating to handling repositories.
+* Handling Packages::       All commands relating to handling packages.
+* Handling Repositories::   All commands relating to handling repositories.
+* Other Assorted Commands:: Other commands that do not fall neatly into either category.
 
 ---- Miscellaneous ----
 
@@ -29,6 +30,7 @@ These flags are used to directly or indirectly reference packages.
 * -Ci:: Display installed package metadata.
 * -L::  List installed packages.
 * -Qa:: Test a package from a PR.
+* -T::  Display a tree graph of an installed package.
 @end menu
 
 @node -I, -R, Handling Packages, Handling Packages
@@ -170,7 +172,7 @@ List installed packages.
 
 The output can come in two forms. If pacstall detects it is being piped, it will print a newline separated list of package names, which is useful for scripting. If pacstall is not being piped, it will print every package with some useful metadata. This second form is @strong{not} useful for scripting and should @strong{not} be used for it.
 
-@node -Qa, , -L, Handling Packages
+@node -Qa, -T, -L, Handling Packages
 @section -Qa
 Test a package from a PR downstream before merging.
 
@@ -195,8 +197,52 @@ $ pacstall -Qa firefox-bin#5853
 @end example
 
 @example
-$ pacstall -Qa firefox-bin#5853@@github:pacstall/pacstall-programs
+$ pacstall -Qa firefox-bin#5853@@github:@value{SHORTHANDREPO}
 @end example
+
+@node -T, , -Qa, Handling Packages
+@section -T
+Display a tree graph of a package:
+
+@example
+@command{pacstall} -T @var{package}
+@end example
+
+This command is a holdout from when pacstall used @command{stow}, and one could just run @command{tree /usr/src/pacstall/pkg}.
+
+@node Other Assorted Commands, -I, Commands, Commands
+@section Other Assorted Commands
+
+These commands are more general purpose.
+
+@menu
+* -U:: Update pacstall.
+* -D:: Download pacscript.
+@end menu
+
+@node -U, -D, Other Assorted Commands, Other Assorted Commands
+@section -U
+This is the primary method of updating pacstall.
+
+@example
+@command{pacstall} -U [@option{username} [@option{branch}] | @samp{.}]
+@end example
+
+This updates pacstall and needed scripts. If no argument for @option{branch} is given, it will default to @samp{master}. When updating to a specific repository, the arguments will be saved (@pxref{update}) and passed in the next time @code{-U} is used, but only if no arguments are given. You may replace the space separating the username and branch with a @samp{:} if you want.
+
+If the repository cannot be reached, pacstall will not update, and the current state will not be changed.
+
+You may also pass in a literal period (@samp{.}) which will update from the current directory (assuming it is a pacstall repository)
+
+@node -D, , -U, Other Assorted Commands
+@section -D
+Download pacscript to current directory.
+
+@example
+@command{pacstall} -D @var{package}
+@end example
+
+You may also specify an arbitrary repository in the same method as specifying repositories with @ref{-S}.
 
 @node Handling Repositories, , Commands, Commands
 @section Handling Repositories

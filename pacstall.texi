@@ -5,6 +5,8 @@
 
 @c These are comments specific to the distributor of Pacstall
 @set GITHUBURL https://github.com/pacstall/pacstall
+@set GITHUBREPOURL https://github.com/pacstall/pacstall-programs
+@set SHORTHANDREPO pacstall/pacstall-programs
 @set REPOURL https://raw.githubusercontent.com/pacstall/pacstall-programs/master
 
 @copying

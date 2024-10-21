@@ -1,3 +1,22 @@
 @node Introduction, Commands, Top, Top
 @chapter Introduction
-Pacstall is the AUR for Ubuntu, allowing bleeding edge software without drawbacks.
+Pacstall is the AUR Ubuntu wishes it had. It takes the AUR and puts a spin on it, making it easier to install programs without scouring github repositories and the likes.
+
+@section Bugs
+If you find any bugs in Pacstall itself, please submit a bug request at @url{@value{GITHUBURL}/issues}
+
+If you find any bugs in a pacscript, please submit a bug request at @url{@value{GITHUBREPOURL}/issues}
+
+The main method Pacstall developers and users use to communicate with each other is through Discord, but you may and are encouraged to use GitHub issues as well.
+
+@section Authors
+The Pacstall team @email{pacstall@@pm.me}
+
+@itemize
+@item @url{https://github.com/Elsie19, Elsie19}
+@item @url{https://github.com/wizard-28, wizard-28}
+@item @url{https://github.com/D-Brox, D-Brox}
+@item @url{https://github.com/saenai255, saenai255}
+@item @url{https://github.com/oklopfer, oklopfer}
+@item @url{https://github.com/0oAstro, Astro}
+@end itemize
