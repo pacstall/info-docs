@@ -1,0 +1,7 @@
+@node Repo, , Pacscript, Top
+@chapter Repo
+This chapter is a reference for creating, maintaining, and using repositories.
+
+@c @menu
+@c * FIX:: All commands relating to handling packages.
+@c @end menu

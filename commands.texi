@@ -5,7 +5,7 @@ This is the pacstall command reference page.
 @menu
 ---- Managing Packages ----
 
-* Installing Packages:: All commands relating to installing packages.
+* Handling Packages:: All commands relating to handling packages.
 
 ---- Miscellaneous ----
 
@@ -13,14 +13,17 @@ This is the pacstall command reference page.
 * Environmental Variables:: Variables that affect pacstall.
 @end menu
 
-@node Installing Packages, -I, Commands, Commands
-@section Installing Packages
+@node Handling Packages, -I, Commands, Commands
+@section Handling Packages
 
 @menu
-* -I:: Install a package.
+* -I::  Install a package.
+* -R::  Remove a package.
+* -S::  Search for a package.
+* -Sd:: Search description for a package.
 @end menu
 
-@node -I, , Installing Packages,
+@node -I, -R, Handling Packages, Handling Packages
 @section -I
 @code{pacstall -I} is the primary command used to install packages:
 
@@ -39,7 +42,84 @@ This flag installs a given package from a remote repository or a local @ref{Pacs
 @item @samp{codeberg}
 @end itemize
 
-Other git providers may use a direct link or submit a patch to add yours. Those providers must be added beforehand to the @ref{pacstallrepo} with @ref{-A}. If multiple repositories are enabled, pacstall will default to @samp{pacstall/pacstall-programs}, but you can still choose to install from other repositories. You may also specify a local pacscript by including the @file{.pacscript} suffix.
+@c TODO: -A
+Other git providers may use a direct link or submit a patch to add yours. Those providers must be added beforehand to the @ref{pacstallrepo} with @samp{-A}. If multiple repositories are enabled, pacstall will default to @samp{pacstall/pacstall-programs}, but you can still choose to install from other repositories.
+
+You may also specify a local pacscript by including the @file{.pacscript} suffix.
+
+@example
+$ pacstall -I neofetch # Install neofetch
+@end example
+
+@example
+$ pacstall -I "alacritty@@github:user/reponame" # Install 'alacritty' from @url{https://github.com/user/reponame}
+@end example
+
+@example
+$ pacstall -I "alacritty@@https://raw.githubusercontent.com/user/reponame/master" # Install 'alacritty' from a raw link
+@end example
+
+@example
+$ pacstall -I "citra@@piracy" # Install 'citra' from a repository @ref{alias} named 'piracy'
+@end example
+
+@example
+$ pacstall -I foo.pacscript # Install a local file called @file{foo.pacscript}
+@end example
+
+@example
+$ pacstall -I @strong{$parent}:pkgbase # Install all pkgnames in the pkgbase named @strong{parent}
+@end example
+
+@example
+$ pacstall -I parent:@strong{$child} # Install only the pkgname @strong{child} from the pkgbase parent.
+@end example
+
+@node -R, -S, -I, Handling Packages
+@section -R
+@code{pacstall -R} is the primary way to remove a given package from the system:
+
+@example
+@command{pacstall} -R @var{package}
+@end example
+
+@node -S, -Sd, -R, Handling Packages
+@section -S
+@code{pacstall -S} is one of the ways to search for a given package:
+
+@example
+@command{pacstall} -S @var{package}
+@end example
+
+A clickable hyperlink to repositories are displayed in VTE terminals.
+
+To search in a specific repository, use the @samp{@@} separator.
+
+@example
+$ pacstall -S -git # Search for all git packages
+@end example
+
+@example
+$ pacstall -S "-bin@@github:user/reponame" # Search for all binary packages in a specific repo
+@end example
+
+@node -Sd, , -S, Handling Packages
+@section -Sd
+@code{pacstall -Sd} is one of the ways to search for a given package with description searching:
+
+@example
+@command{pacstall} -Sd @var{package}
+@end example
+
+Like @ref{-S}, but both displays description on output, and searches through descriptions upon the query. To do case-sensitive search, use quotes within quotes ("''" or '""').
+
+@example
+$ pacstall -Sd browser # Search for 'browser' in name and description of packages
+@end example
+
+@example
+$ pacstall -Sd "'Browser'" # Search for the literal string 'Browser' in name and description
+@end example
 
 @node Environmental Flags, , Commands, Commands
 @section Environmental Flags

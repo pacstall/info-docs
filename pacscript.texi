@@ -4,7 +4,7 @@ This chapter is a reference to the pacscript format.
 
 @menu
 * Sample Script:: Script with every key included.
-* Keys:: List of keys and descriptions of their functionality.
+* Keys::          List of keys and descriptions of their functionality.
 @end menu
 
 @node Sample Script, Keys, Pacscript,
@@ -126,61 +126,61 @@ This section is dedicated to describing every valid key in a pacscript. You will
 @menu
 ---- Package Metadata Variables ----
 
-* pkgbase:: Split packaging functionality.
-* pkgname:: Naming packages.
-* repology:: Linking package versions.
-* arch:: Controlling architecture building.
-* pkgver:: Controlling versioning.
-* pkgrel:: Control pacscript file versioning.
-* epoch:: Control forcible upgrades.
-* url:: Adding a useful link to project.
+* pkgbase::      Split packaging functionality.
+* pkgname::      Naming packages.
+* repology::     Linking package versions.
+* arch::         Controlling architecture building.
+* pkgver::       Controlling versioning.
+* pkgrel::       Control pacscript file versioning.
+* epoch::        Control forcible upgrades.
+* url::          Adding a useful link to project.
 * incompatible:: Declaring package incompatiblities.
-* compatible:: Declaring package compatiblities.
-* pkgdesc:: Adding descriptions to packages.
-* license:: Licensing package.
-* maintainer:: Adding maintainers.
+* compatible::   Declaring package compatiblities.
+* pkgdesc::      Adding descriptions to packages.
+* license::      Licensing package.
+* maintainer::   Adding maintainers.
 
 ---- Package Sources ----
 
-* source:: Adding sources.
-* sums:: Hashchecking sources.
-* nosubmodules:: Preventing submodules from being cloned.
-* noextract:: Preventing archives from being extracted.
-* backup:: Denoting files as configuration files.
+* source::              Adding sources.
+* sums::                Hashchecking sources.
+* nosubmodules::        Preventing submodules from being cloned.
+* noextract::           Preventing archives from being extracted.
+* backup::              Denoting files as configuration files.
 * external_connection:: Allowing internet connection during packaging.
 
 ---- Package Dependencies ----
 
-* depends:: Creating dependency links between packages.
-* makedepends:: Creating build dependency links between packages.
+* depends::      Creating dependency links between packages.
+* makedepends::  Creating build dependency links between packages.
 * checkdepends:: Creating testing dependency links between packages.
-* optdepends:: Creating optional dependency links between packages.
-* pacdeps:: Creating pacstall dependency links between packages.
+* optdepends::   Creating optional dependency links between packages.
+* pacdeps::      Creating pacstall dependency links between packages.
 
 ---- Package Relations ----
 
 (All package relations may use version constraints.)
 
-* breaks:: Denoting package conflicts.
-* conflicts:: Denoting package path conflicts.
-* makeconflicts:: Denoting makedepends conflicts.
+* breaks::         Denoting package conflicts.
+* conflicts::      Denoting package path conflicts.
+* makeconflicts::  Denoting makedepends conflicts.
 * checkconflicts:: Denoting checkdepends conflicts.
-* replaces:: Denoting packages that can be overwritten by package.
-* provides:: Denoting a list of packages that this package can satisfy as a dependency.
-* recommends:: Denoting a list of packages can improve functionality of this package.
-* suggests:: Similar to optdepends but used for distributing built packages.
-* enhances:: List of packages that this package can satisfy as a suggested package or recommended package.
-* gives:: Override package name.
-* priority:: Sets priority of package.
-* mask:: Hide results from package managers.
+* replaces::       Denoting packages that can be overwritten by package.
+* provides::       Denoting a list of packages that this package can satisfy as a dependency.
+* recommends::     Denoting a list of packages can improve functionality of this package.
+* suggests::       Similar to optdepends but used for distributing built packages.
+* enhances::       List of packages that this package can satisfy as a suggested package or recommended package.
+* gives::          Override package name.
+* priority::       Sets priority of package.
+* mask::           Hide results from package managers.
 
 ---- Functions ----
 
 ------ Packaging Scripts ------
 
 * prepare():: Preparing packages.
-* build():: Building packages.
-* check():: Sanity checking packages.
+* build()::   Building packages.
+* check()::   Sanity checking packages.
 * package():: Install packages.
 
 ------ Maintainer Scripts ------
@@ -314,8 +314,7 @@ An array of keys that contain the name and contact email of the package maintain
 
 @node source, sums, maintainer, Keys
 @subsection source
-@c TODO: Add xref.
-This is an array with URLs as elements. These will be downloaded by pacstall before the @samp{prepare()} function. @samp{source} can be created many different ways, and is incredibly powerful in functionality.
+This is an array with URLs as elements. These will be downloaded by pacstall before the @ref{prepare()} function. @ref{source} can be created many different ways, and is incredibly powerful in functionality.
 
 Inside a @samp{source} array, you have the following schema:
 
@@ -371,8 +370,7 @@ Extraction method is calculated from the initial url basename and not @samp{dest
 @item @samp{*.tar}
 @end itemize
 
-@c TODO: NOEXTRACT
-If using an archive that contains a @samp{*.tar.*} extension that is not covered by any of the above listed, pacstall will attempt to extract it with the regular @samp{*.tar} method. If pacstall does not recognize the extension, it will not try to extract it. If you do not want to extract a certain source, see @samp{noextract}.
+If using an archive that contains a @samp{*.tar.*} extension that is not covered by any of the above listed, pacstall will attempt to extract it with the regular @samp{*.tar} method. If pacstall does not recognize the extension, it will not try to extract it. If you do not want to extract a certain source, @ref{noextract}.
 
 You may define architecture specific sources like @samp{source_$arch}, and you can define distro sources like @samp{source_$DISTRO}, where @samp{$DISTRO} can be either @samp{ubuntu} or @samp{debian}, or a codename of a release, such as @samp{jammy} or @samp{bookworm}. If you want to combine both a distro and architecture, you may do @samp{source_$@{DISTRO@}_$@{arch@}}. A CI maintained file in @url{https://github.com/pacstall/pacstall-programs/blob/master/distrolist, pacstall/pacstall-programs} will provide an up-to-date list of the supported releases.
 
@@ -454,8 +452,7 @@ This is an array used to declare runtime dependencies of a package. As with @ref
 @end enumerate
 
 @item
-@c TODO: PACDEPS
-Dependencies can be alternative, so that if the first package cannot be found or it's dependency constraints cannot be satisfied, will attempt to find the alternative package: @samp{pkg | pkg2}. These constraints apply to all dependency arrays, with the exception of pacdeps.
+Dependencies can be alternative, so that if the first package cannot be found or it's dependency constraints cannot be satisfied, will attempt to find the alternative package: @samp{pkg | pkg2}. These constraints apply to all dependency arrays, with the exception of @ref{pacdeps}.
 
 @end enumerate
 
@@ -465,8 +462,7 @@ This is an array used to declare build-time dependencies. Everything from @ref{d
 
 @node checkdepends, optdepends, makedepends, Keys
 @subsection checkdepends
-@c TODO: CHECK FUNCTION
-This is an array used to declare dependencies needed for testing in the @samp{check} function. These are installed at the same time as @ref{makedepends}. Everything from @ref{depends} apply here.
+This is an array used to declare dependencies needed for testing in the @ref{check()} function. These are installed at the same time as @ref{makedepends}. Everything from @ref{depends} apply here.
 
 @node optdepends, pacdeps, checkdepends, Keys
 @subsection optdepends
@@ -502,8 +498,7 @@ This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
 
 @node checkconflicts, replaces, makedepends, Keys
 @subsection checkconflicts
-@c TODO: CHECK()
-This is an array used to declare packages that cannot be installed on the system for testing in the @samp{check()} function, usually because of a package conflict with a check dependency.
+This is an array used to declare packages that cannot be installed on the system for testing in the @ref{check()} function, usually because of a package conflict with a check dependency.
 
 This array can be enhanced by @samp{$arch} and/or @samp{$DISTRO}.
 

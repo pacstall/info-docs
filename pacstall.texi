@@ -58,14 +58,16 @@ This manual is for pacstall @value{VERSION} and is freely distributed under the 
 
 @menu
 * Introduction:: Introduction to pacstall.
-* Commands:: Overview of pacstall commands.
-* Files:: Relevant files used by pacstall.
-* Pacscript:: Pacscript syntax reference.
+* Commands::     Overview of pacstall commands.
+* Files::        Relevant files used by pacstall.
+* Pacscript::    Pacscript syntax reference.
+* Repo::         Repository maintainence reference.
 @end menu
 
 @include introduction.texi
 @include commands.texi
 @include files.texi
 @include pacscript.texi
+@include repo.texi
 
 @bye
